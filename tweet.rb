@@ -18,10 +18,7 @@ end
 
 stream_client.user do |tweet|
   if tweet.is_a?(Twitter::Tweet)
-    puts(tweet.user.name)
-    puts("@#{tweet.user.screen_name}")
-    puts(tweet.text)
-    puts("-----")
     client.favorite(tweet.id)
+    client.retweet(tweet.id)
   end
 end
