@@ -27,10 +27,11 @@ stream_client.user do |tweet|
   end
 end
 
-stream_client.user do |followers|
-    if followers.is_a?(Twitter::followers)
-        client.update("#{followers.screen_name}さんフォローありがとうございます")
-        client.follow(followers.screen_name)
+stream_client.user do |object|
+    when Twitter::Streaming::Event
+    if(object.name == "follow".to_sym) && (object.source.id != ********)
+        client.update("#{object.source.name}さんフォローありがとうございます")
+        client.follow(object.source.id)
     end
 end
 
