@@ -25,10 +25,6 @@ stream_client.user do |tweet|
       client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
     end 
   end
-  client.follower_id("nukkoro_bot").take(1).each do |user|
-     client.follow(user)
-     end
-  
-  end
+end
 
 
