@@ -18,6 +18,7 @@ end
 
 stream_client.user do |tweet|
   if tweet.is_a?(Twitter::Tweet)
+    client.update("@#{tweet.user.screen_name}\ntest", options = {:in_reply_to_status_id => tweet.id})
     client.favorite(tweet.id)
     client.retweet(tweet.id)
   end
