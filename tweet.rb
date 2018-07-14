@@ -25,13 +25,10 @@ stream_client.user do |tweet|
       client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
     end 
   end
-end
+  client.follower_id("nukkoro_bot").take(1).each do |user|
+     client.follow(user)
+     end
+  
+  end
 
-stream_client.user do |object|
-    when Twitter::Streaming::Event
-    if(object.name == "follow".to_sym) && (object.source.id != ********)
-        client.update("#{object.source.name}さんフォローありがとうございます")
-        client.follow(object.source.id)
-    end
-end
 
