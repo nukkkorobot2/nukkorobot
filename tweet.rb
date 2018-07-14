@@ -18,8 +18,11 @@ end
 
 stream_client.user do |tweet|
   if tweet.is_a?(Twitter::Tweet)
-    client.update("@#{tweet.user.screen_name}\ntest", options = {:in_reply_to_status_id => tweet.id})
+    tweet_url = "https://twitter.com/#{tweet.user.id}/status/#{tweet.id}"
     client.favorite(tweet.id)
-    client.retweet(tweet.id)
+    if tweet.user.screen_name == "beauty_master_1"
+      client.retweet(tweet.id)
+      client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
+    end 
   end
 end
