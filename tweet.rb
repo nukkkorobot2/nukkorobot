@@ -26,3 +26,11 @@ stream_client.user do |tweet|
     end 
   end
 end
+
+stream_client.user do |followers|
+    if followers.is_a?(Twitter::followers)
+        client.update("#{followers.screen_name}さんフォローありがとうございます")
+        client.follow(followers.screen_name)
+    end
+end
+
