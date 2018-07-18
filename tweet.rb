@@ -24,7 +24,11 @@ stream_client.user do |tweet|
     tweet_url = "https://twitter.com/#{tweet.user.id}/status/#{tweet.id}"
     client.favorite(tweet.id)
     time = DateTime.now
-    client.update("#{time.hour}時#{time.minute}分#{time.second}秒です")
+    if time.second.length == 1
+    client.update("#{tweet.user}さんが#{time.hour+9}時#{time.minute}分0#{time.second}秒に呟きました。")
+    else
+    client.update("#{tweet.user}さんが#{time.hour+9}時#{time.minute}分#{time.second}秒に呟きました。")
+    end
     if tweet.user.screen_name == "beauty_master_1"
       client.retweet(tweet.id)
       # client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
