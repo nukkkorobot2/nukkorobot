@@ -20,7 +20,7 @@ stream_client = Twitter::Streaming::Client.new do |config|
 end
 
 loop do
-stream_client.user do |tweet|
+
   if tweet.is_a?(Twitter::Tweet)
     tweet_url = "https://twitter.com/#{tweet.user.id}/status/#{tweet.id}"
     client.favorite(tweet.id)
@@ -34,6 +34,6 @@ stream_client.user do |tweet|
       if time.second == 10
           client.update("#{time.hour}時#{time.minute}分#{time.second}秒です")
   end
-end
+
 end
 
