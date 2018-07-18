@@ -25,7 +25,7 @@ stream_client.user do |tweet|
     if tweet.user.screen_name != "nukkoro_bot"
     client.favorite(tweet.id)
     time = DateTime.now
-    client.update("#{tweet.user.name}さんが#{time.hour+9}時#{time.minute}分#{time.second}秒に呟きました。")
+    client.update("#{tweet.user.name}さんが#{time.hour+9}時#{time.minute}分#{time.second-1}秒に呟きました。")
     if tweet.user.screen_name == "beauty_master_1"
       client.retweet(tweet.id)
       # client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
