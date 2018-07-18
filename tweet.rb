@@ -1,6 +1,9 @@
 require 'twitter'
+require "date"
+
 ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
 
+time = DateTime.now
 
 client = Twitter::REST::Client.new do |config|
   config.consumer_key        = ENV['MY_CONSUMER_KEY']
@@ -22,9 +25,13 @@ stream_client.user do |tweet|
     client.favorite(tweet.id)
     if tweet.user.screen_name == "beauty_master_1"
       client.retweet(tweet.id)
-      client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
+      # client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
     end 
   end
+  if time.second == 10
+      client.update("#{time.hour}時#{time.minute}分#{time.second}秒です")
+  end
+  
 end
 
 
