@@ -19,6 +19,7 @@ stream_client = Twitter::Streaming::Client.new do |config|
   config.access_token_secret = ENV['MY_ACCESS_TOKEN_SECRET']
 end
 
+loop do
 stream_client.user do |tweet|
   if tweet.is_a?(Twitter::Tweet)
     tweet_url = "https://twitter.com/#{tweet.user.id}/status/#{tweet.id}"
@@ -28,12 +29,11 @@ stream_client.user do |tweet|
       # client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
     end 
   end
-  loop do
+
       time = DateTime.now
       if time.second == 10
           client.update("#{time.hour}時#{time.minute}分#{time.second}秒です")
-      end
   end
 end
-
+end
 
