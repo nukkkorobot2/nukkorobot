@@ -26,9 +26,9 @@ stream_client.user do |tweet|
     if tweet.user.screen_name != "nukkoro_bot"
     client.favorite(tweet.id)
     if time.hour >= 15
-        client.update("#{tweet.user.name}さんが#{time.hour-15}時#{time.minute}分#{time.second-1}秒に呟きました。\n#{tweet.text}\n#{tweet.time}")
+        client.update("#{tweet.user.name}さんが#{time.hour-15}時#{time.minute}分#{time.second}秒に呟きました。\n#{tweet.text}")
     else
-        client.update("#{tweet.user.name}さんが#{time.hour+9}時#{time.minute}分#{time.second-1}秒に呟きました。\n#{tweet.text}\n#{tweet.time}")
+        client.update("#{tweet.user.name}さんが#{time.hour+9}時#{time.minute}分#{time.second}秒に呟きました。\n#{tweet.text}")
     end
     if tweet.user.screen_name == "beauty_master_1"
       client.retweet(tweet.id)
