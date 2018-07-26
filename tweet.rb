@@ -19,8 +19,9 @@ stream_client = Twitter::Streaming::Client.new do |config|
   config.access_token_secret = ENV['MY_ACCESS_TOKEN_SECRET']
 end
 
-stream_client.user do |tweet|
-  if tweet.is_a?(Twitter::Tweet)
+stream_client.user do |object|
+  case object
+  when Twitter::Tweet
     time = DateTime.now
     tweet_url = "https://twitter.com/#{tweet.user.id}/status/#{tweet.id}"
     if tweet.user.screen_name != "nukkoro_bot"
@@ -34,7 +35,6 @@ stream_client.user do |tweet|
       client.retweet(tweet.id)
       # client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
     end
-    end
-  end
+  end
 end
 
