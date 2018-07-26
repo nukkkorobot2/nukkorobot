@@ -34,7 +34,7 @@ stream_client.user do |object|
     if tweet.user.screen_name == "beauty_master_1"
       client.retweet(tweet.id)
       # client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
-    end
+    
   end
 end
 
