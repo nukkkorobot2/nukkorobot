@@ -21,7 +21,7 @@ end
 
 stream_client.user do |object|
   case object
-  when Twitter::Tweet
+  when Twitter::Tweet then
     time = DateTime.now
     tweet_url = "https://twitter.com/#{tweet.user.id}/status/#{tweet.id}"
     if tweet.user.screen_name != "nukkoro_bot"
