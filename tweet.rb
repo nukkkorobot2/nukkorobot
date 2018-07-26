@@ -20,8 +20,7 @@ stream_client = Twitter::Streaming::Client.new do |config|
 end
 
 stream_client.user do |object|
-  case object
-  when Twitter::Tweet
+  if object.is_a?(Twitter::Tweet)
     time = DateTime.now
     tweet_url = "https://twitter.com/#{tweet.user.id}/status/#{tweet.id}"
     if tweet.user.screen_name != "nukkoro_bot"
@@ -34,10 +33,8 @@ stream_client.user do |object|
     if tweet.user.screen_name == "beauty_master_1"
       client.retweet(tweet.id)
       # client.update("@nukkoron \n 新しい投稿です\n #{tweet_url}")
-  when Twitter::DirectMessage
-    client.update("I have a direct message")
-  else
-    client.update("error")
-  end
+    end
+    end
+  end
 end
 
