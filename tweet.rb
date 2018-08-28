@@ -8,10 +8,10 @@ require 'fastimage'
 ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
 
 client = Twitter::REST::Client.new do |config|
-    config.consumer_key = ENV['cons_key']
-    config.consumer_secret = ENV['cons_sec']
-    config.access_token = ENV['token']
-    config.access_token_secret = ENV['token_sec']
+    config.consumer_key        = ENV['MY_CONSUMER_KEY']
+    config.consumer_secret     = ENV['MY_CONSUMER_SECRET']
+    config.access_token        = ENV['MY_ACCESS_TOKEN']
+    config.access_token_secret = ENV['MY_ACCESS_TOKEN_SECRET']
 end
 
 #キューの定義
