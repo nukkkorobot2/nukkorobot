@@ -3,7 +3,7 @@ require 'twitter'
 require 'net/http'
 require 'uri'
 require "open-uri"
-require 'fastimage'
+
 
 ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
 
