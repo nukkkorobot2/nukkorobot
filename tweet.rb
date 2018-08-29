@@ -52,17 +52,17 @@ sinceid = client.list_timeline("nukkoro_bot", "test").first.id
 loop do
   
       i = 0
-      client.list_timeline("nukkoron", "tl-20180814181253", since_id: sinceid, count: 3).each do |tweet|
+      client.list_timeline("nukkoro_bot", "tl-list", since_id: sinceid, count: 3).each do |tweet|
                   puts "--------------------------------------------------"
                   puts "\e[34m#{tweet.user.name}\e[0m \e[32m@#{tweet.user.screen_name}\e[0m"
                   puts "#{tweet.text}"
-                  #if tweet.text.include?("https") == true
-                  #   url = tweet.text[/https:\/\/t.co\/(.+?){10}/]
-                  #   real_url = expand_url(url)
-                  #   if real_url.include?("photo") == true && tweet.user.screen_name != "nukkoro_bot"
-                  #       client.update(tweet.text)
-                  #   end
-                  #end
+                  if tweet.text.include?("https") == true
+                     url = tweet.text[/https:\/\/t.co\/(.+?){10}/]
+                     real_url = expand_url(url)
+                     if real_url.include?("photo") == true && tweet.user.screen_name != "nukkoro_bot"
+                         client.retweet(tweet.id)
+                     end
+                  end
                   puts "Fav: #{tweet.favorite_count}  RT: #{tweet.retweet_count}"
                   if my_name.any? {|m| tweet.text.include? m} && tweet.text.include?("@nukkoron") == false
                       client.favorite(tweet.id)
