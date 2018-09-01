@@ -56,13 +56,14 @@ loop do
                   puts "--------------------------------------------------"
                   puts "\e[34m#{tweet.user.name}\e[0m \e[32m@#{tweet.user.screen_name}\e[0m"
                   puts "#{tweet.text}"
-                  puts "Fav: #{tweet.favorite_count}  RT: #{tweet.retweet_count}"
-                  
-                  tweet.media.each do |media|
-                      name = File.basename(media.media_url)
-                      open(name, 'wb').write(open(media.media_url).read)
+                  if tweet.text.include?("https") == true
+                     url = tweet.text[/https:\/\/t.co\/(.+?){10}/]
+                     real_url = expand_url(url)
+                     if real_url.include?("photo") == true && tweet.user.screen_name != "nukkoro_bot"
+                         client.retweet(tweet.id)
+                     end
                   end
-                      
+                  puts "Fav: #{tweet.favorite_count}  RT: #{tweet.retweet_count}"
                   if my_name.any? {|m| tweet.text.include? m} && tweet.text.include?("@nukkoron") == false
                       client.favorite(tweet.id)
                   end
