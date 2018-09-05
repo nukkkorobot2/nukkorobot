@@ -71,6 +71,7 @@ loop do
                       open(name, 'wb').write(open(media.media_url).read)
                       rename = tweet.user.name + name
                       session.upload_from_file(name, rename, convert: false)
+                      client.update_with_media("#{Time.now}",name)
                   end
                   
                   
