@@ -49,6 +49,10 @@ end
 #エゴサ用
 my_name = ["ぬこ", "ぬっころ", "ヌッコロ", "闇猫", "やみ猫", "闇ねこ", "やみねこ"]
 
+
+#カウンタ
+counter = 0
+
 #
 #タイムライン読み込み
 #
@@ -74,13 +78,24 @@ loop do
                       client.update_with_media("#{Time.now}",name)
                   end
                   
+                  if counter % 100 == 0
+                      picture =[]
+                      files = Dir.glob("/tmp/*.{jpg,JPG}")
+                      pass = files[rand(files.size)].to_s
+                      picture << File.new(pass)
+                      client.update_with_media("#ランダム画像",picture)
+                  end
                   
                   
                   
                   if i == 0
                       sinceid = tweet.id unless tweet.retweeted?
                   end
+                  
                   i = i + 1
+                  
+                  counter++
+                  
                   #client.favorite(tweet.id)
        end
     
