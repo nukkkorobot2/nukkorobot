@@ -75,16 +75,10 @@ loop do
                       open(name, 'wb').write(open(media.media_url).read)
                       rename = tweet.user.name + name
                       session.upload_from_file(name, rename, convert: false)
-                      client.update_with_media("#{Time.now}",name)
+                      client.update_with_media("save complete",name)
                   end
                   
-                  if counter % 100 == 0
-                      picture =[]
-                      files = Dir.glob("/tmp/*.{jpg,JPG}")
-                      pass = files[rand(files.size)].to_s
-                      picture << File.new(pass)
-                      client.update_with_media("#ランダム画像",picture)
-                  end
+                  
                   
                   
                   
@@ -95,6 +89,9 @@ loop do
                   i = i + 1
                   
                   counter++
+                  if counter % 100 == 0
+                      client.update("現在#{counter}回目のループです。")
+                  end
                   
                   #client.favorite(tweet.id)
        end
