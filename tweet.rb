@@ -64,6 +64,9 @@ loop do
       #タイムライン読み込み
       client.list_timeline("nukkoro_bot", "tl-list", since_id: sinceid, count: 3).each do |tweet|
           
+          
+          if tweet.user.screen_name != "nukkoro_bot"
+              
                   #画像保存ブロック
                   tweet.media.each do |media|
                       name = File.basename(media.media_url)
@@ -158,6 +161,8 @@ loop do
                   
                   #エタフォ
                   client.favorite(tweet.id)
+                  
+            end
        end
     #ループカウンタ更新
     counter = counter + 1
