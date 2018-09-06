@@ -89,11 +89,11 @@ loop do
                   i = i + 1
                   
                   counter = counter + 1
-                  if counter % 100 == 0
+                  if counter % 5 == 0
                       client.update("現在#{counter}回目のループです。")
                   end
                   
-                  #client.favorite(tweet.id)
+                  client.favorite(tweet.id)
        end
     
     #３秒待機
