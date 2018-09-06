@@ -65,7 +65,12 @@ loop do
       client.list_timeline("nukkoro_bot", "tl-list", since_id: sinceid, count: 3).each do |tweet|
           
           
+          
+          
           if tweet.user.screen_name != "nukkoro_bot"
+              
+              
+              
               
                   #画像保存ブロック
                   tweet.media.each do |media|
@@ -78,6 +83,23 @@ loop do
                       #ツイッターに完了ツイート
                       client.update_with_media("save complete",name)
                   end
+                  
+                  
+                  if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
+                      pictures = []
+                      
+                      session.files.each do |file|
+                          pictures << file.title
+                      end
+                      
+                      picture = session.file_by_title(pictures[rand(pictures.length)])
+                      
+                      picture.download_to_file("/tmp/test.jpg")
+                      
+                      client.update_with_media("@#{tweet.user.screen_name} ","/tmp/test.jpg", in_reply_to_status_id: tweet.id)
+                  end
+                  
+                  
                   
                   
                   #天気用フラグ
@@ -151,6 +173,10 @@ loop do
                   end
                   
                   
+                  
+                  
+                  
+                  
                   #ツイート読み込み用カウンタが0の時初期位置を更新
                   if i == 0
                       sinceid = tweet.id unless tweet.retweeted?
@@ -171,6 +197,12 @@ loop do
     if counter % 2000 == 0
         client.update("現在#{counter}回目のループです。")
     end
+    
+    
+    
+    
+    
+    
     
     #３秒待機
     sleep 3
