@@ -82,7 +82,7 @@ loop do
                   min_flag = 1
                   
                   #天気予報ブロック
-                  if weather_word.any? {|m| tweet.text.include? m} && tweet.text.include?("@nukkoron") == true
+                  if weather_word.any? {|m| tweet.text.include? m} && tweet.text.include?("@nukkoro_bot") == true
                       
                       #検索都市分岐
                       if tweet.text.include?("東京")
