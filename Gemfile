@@ -1,3 +1,3 @@
 source "https://rubygems.org"
 gem "twitter"
-gem "google_drive"
+gem "google-api-client"

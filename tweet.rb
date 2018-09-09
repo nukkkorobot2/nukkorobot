@@ -4,6 +4,10 @@ require 'net/http'
 require 'uri'
 require "open-uri"
 require "google_drive"
+require 'google/apis/drive_v3'
+require 'googleauth'
+require 'googleauth/stores/file_token_store'
+require 'fileutils'
 
 
 ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
@@ -15,8 +19,40 @@ client = Twitter::REST::Client.new do |config|
     config.access_token_secret = ENV['MY_ACCESS_TOKEN_SECRET']
 end
 
-
+#google API 非公式
 session = GoogleDrive::Session.from_config("config.json")
+
+#google API 公式情報
+OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'.freeze
+APPLICATION_NAME = 'Drive API Ruby Quickstart'.freeze
+CREDENTIALS_PATH = 'credentials.json'.freeze
+TOKEN_PATH = 'token.yaml'.freeze
+SCOPE = Google::Apis::DriveV3::AUTH_DRIVE_METADATA_READONLY
+
+
+def authorize
+    client_id = Google::Auth::ClientId.from_file(CREDENTIALS_PATH)
+    token_store = Google::Auth::Stores::FileTokenStore.new(file: TOKEN_PATH)
+    authorizer = Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
+    user_id = 'default'
+    credentials = authorizer.get_credentials(user_id)
+    if credentials.nil?
+        url = authorizer.get_authorization_url(base_url: OOB_URI)
+        puts 'Open the following URL in the browser and enter the ' \
+        "resulting code after authorization:\n" + url
+        code = gets
+        credentials = authorizer.get_and_store_credentials_from_code(
+                                                                     user_id: user_id, code: code, base_url: OOB_URI
+                                                                     )
+    end
+    credentials
+end
+
+
+#google API 公式
+service = Google::Apis::DriveV3::DriveService.new
+service.client_options.application_name = APPLICATION_NAME
+service.authorization = authorize
 
 
 #キューの定義
@@ -80,8 +116,8 @@ loop do
                       rename = tweet.user.name + name
                       #ドライブにアップロード
                       session.upload_from_file(name, rename, convert: false)
-                      #ツイッターに完了ツイート
-                      client.update_with_media("save complete",name)
+                      #RT
+                      client.retweet(tweet.id)
                   end
                   
                   
@@ -90,8 +126,12 @@ loop do
                   if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
                       pictures = []
                       
-                      session.files.each do |file|
-                          pictures << file.title
+                      #最新200件取得
+                      response = service.list_files(page_size: 200,
+                                                    fields: 'nextPageToken, files(id, name)')
+                                                    
+                      response.files.each do |file|
+                            pictures << file.name
                       end
                       
                       picture = session.file_by_title(pictures[rand(pictures.length)])
