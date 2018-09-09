@@ -203,7 +203,7 @@ loop do
     
     
     #時報
-    now = Time.now
+    now = DateTime.now
     if now.minute == 0
         if now.second >= 0 && now.second <= 5
                 client.update("ぬっころBOTが#{now.hour}時ごろをお知らせします。")
