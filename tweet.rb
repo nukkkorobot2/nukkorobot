@@ -85,6 +85,8 @@ loop do
                   end
                   
                   
+                  
+                  #画像返信ブロック
                   if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
                       pictures = []
                       
@@ -110,6 +112,7 @@ loop do
                   if weather_word.any? {|m| tweet.text.include? m} && tweet.text.include?("@nukkoro_bot") == true
                       
                       #検索都市分岐
+                      #都市一覧=>http://weather.livedoor.com/forecast/rss/primary_area.xml
                       if tweet.text.include?("東京")
                           wcity = "130010"
                           city = "東京"
@@ -194,11 +197,18 @@ loop do
     counter = counter + 1
     
     #ループカウンタが2000の倍数でツイート
-    if counter % 2000 == 0
+    if counter % 2000 == 0 || counter == 1
         client.update("現在#{counter}回目のループです。")
     end
     
     
+    #時報
+    now = Time.now
+    if now.minute == 0
+        if now.second >= 0 && now.second <= 5
+                client.update("ぬっころBOTが#{now.hour}時ごろをお知らせします。")
+        end
+    end
     
     
     
