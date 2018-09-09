@@ -206,7 +206,7 @@ loop do
     now = DateTime.now
     if now.minute == 0
         if now.second >= 0 && now.second <= 5
-            if time.hour >= 15
+            if now.hour >= 15
                 client.update("ぬっころBOTが#{now.hour-15}時ごろをお知らせします。")
                 else
                 client.update("ぬっころBOTが#{now.hour+9}時ごろをお知らせします。")
