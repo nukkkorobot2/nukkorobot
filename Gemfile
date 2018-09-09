@@ -1,4 +1,4 @@
 source "https://rubygems.org"
 gem "twitter"
 gem "google-api-client"
-gem "google-drive-ruby"
+gem "google_drive"
