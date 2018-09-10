@@ -121,7 +121,7 @@ loop do
                   end
                   
                   if save_flag == 1
-                      client.rtweet(tweet.id)
+                      client.retweet(tweet.id)
                   end
                   
                   #画像返信ブロック
