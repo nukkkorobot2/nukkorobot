@@ -87,9 +87,9 @@ my_name = ["ぬこ", "ぬっころ", "ヌッコロ", "闇猫", "やみ猫", "闇
 weather_word = ["天気","てんき","気温","きおん"]
 
 
-#ループカウンタ
+#カウンタ
 counter = 0
-
+save_flag = 0
 
 #タイムライン初期位置
 sinceid = client.list_timeline("nukkoro_bot", "test").first.id
@@ -116,11 +116,13 @@ loop do
                       rename = tweet.user.name + name
                       #ドライブにアップロード
                       session.upload_from_file(name, rename, convert: false)
-                      #RT
-                      client.retweet(tweet.id)
+                      #save_flag
+                      save_flag = 1
                   end
                   
-                  
+                  if save_flag == 1
+                      client.rtweet(tweet.id)
+                  end
                   
                   #画像返信ブロック
                   if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
