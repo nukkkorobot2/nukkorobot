@@ -239,7 +239,7 @@ loop do
     counter = counter + 1
     
     #ループカウンタが2000の倍数でツイート
-    if counter % 10 == 0 || counter == 1
+    if counter % 1000 == 0 || counter == 1
         client.update("現在#{counter}回目のループです。\n#{DateTime.now}")
     end
     
