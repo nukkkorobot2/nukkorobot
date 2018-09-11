@@ -106,7 +106,8 @@ loop do
           if tweet.user.screen_name != "nukkoro_bot"
               
               
-              
+                  #フラグ
+                  save_flag = 0
               
                   #画像保存ブロック
                   tweet.media.each do |media|
