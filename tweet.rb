@@ -91,6 +91,13 @@ weather_word = ["天気","てんき","気温","きおん"]
 counter = 0
 save_flag = 0
 
+#BOT起動ツイート
+client.update("BOT起動\n(#{DateTime.now})")
+client.update("起動中...\n(#{DateTime.now})")
+client.update("起動完了\n(#{DateTime.now})")
+
+
+
 #タイムライン初期位置
 sinceid = client.list_timeline("nukkoro_bot", "test").first.id
 loop do
