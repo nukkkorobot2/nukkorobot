@@ -232,7 +232,7 @@ loop do
                   
                   
                   #状態返信
-                  if tweet.text.include?("@nukkoro_bot") && tweet.text.include?("状態") && tweet.user.screen_name == nukkoron
+                  if tweet.text.include?("@nukkoro_bot") && tweet.text.include?("状態") && tweet.user.screen_name == "nukkoron"
                       client.update("#{tweet.user.screen_name}\nBOTは正常に稼働しています。\n現在#{counter}回目のループです。",in_reply_to_status_id: tweet.id)
                   end
                   
