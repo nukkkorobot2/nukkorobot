@@ -8,6 +8,7 @@ require 'google/apis/drive_v3'
 require 'googleauth'
 require 'googleauth/stores/file_token_store'
 require 'fileutils'
+require 'nokogiri'
 
 
 ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
@@ -85,6 +86,10 @@ end
 #エゴサ用
 my_name = ["ぬこ", "ぬっころ", "ヌッコロ", "闇猫", "やみ猫", "闇ねこ", "やみねこ"]
 weather_word = ["天気","てんき","気温","きおん"]
+
+#履修科目
+subjects = ["知的財産権","技術者倫理","ハードウェアセキュリティ","ユビキタスネットワーク","デジタル信号処理","コンテンツセキュリティ","ネットワークセキュリティ",
+            "暗号理論","データベース論","ソフトウェアセキュリティ","Technical English Intermediate English for Science"]
 
 
 #カウンタ
@@ -226,7 +231,45 @@ loop do
                   end
                   
                   
+                  #状態返信
+                  if tweet.text.include?("@nukkoro_bot") && tweet.text.include?("状態") && tweet.user.screen_name == nukkoron
+                      client.update("#{tweet.user.screen_name}\nBOTは正常に稼働しています。\n現在#{counter}回目のループです。",in_reply_to_status_id: tweet.id)
+                  end
                   
+                  #休講情報返信
+                  if tweet.text.include?("nukkoro_bot") && tweet.text.include?("休講")
+                      
+                      #スクレイピング先のurl
+                      ky_url = "http://kyoumu.office.uec.ac.jp/kyuukou/kyuukou.html"
+                      
+                      #webページを開いてhtmlに返す
+                      charset = nil
+                      html = open(ky_url, 'r:Shift_JIS') do |page|
+                          page.read
+                      end
+                      
+                      #htmlを解析してオブジェクトを作成
+                      doc = Nokogiri::HTML.parse(html, nil)
+                      
+                      ky_flag = 0
+                      ky_counter = 1
+                      while doc.search("table tr[#{i}] td[4]").inner_text.empty? == false
+                          if subjects.any? {|m| doc.search("table tr[#{i}] td[4]").inner_text.include? m}
+                              ky_cl = doc.search("table tr[#{i}] td[1]").inner_text
+                              ky_date = doc.search("table tr[#{i}] td[2]").inner_text
+                              ky_period = doc.search("table tr[#{i}] td[3]").inner_text
+                              ky_subject = doc.search("table tr[#{i}] td[4]").inner_text
+                              ky_teacher = doc.search("table tr[#{i}] td[5]").inner_text
+                              client.update("@#{tweet.user.screen_name}\n[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})", in_reply_to_status_id: tweet.id)
+                              ky_flag = 1
+                          end
+                          ky_counter = ky_counter + 1
+                      end
+                      
+                      if ky_flag == 0
+                          client.update("@#{tweet.user.screen_name}\n現在休講情報は出ていません。",in_reply_to_status_id: tweet.id)
+                      end
+                  end
                   
                   
                   
@@ -267,8 +310,45 @@ loop do
     
     
     
+    #休講情報取得
+    if now.hour == 15 && now.minute == 0 && now.second >= 0 && now.second <= 5
+        #スクレイピング先のurl
+        ky_url = "http://kyoumu.office.uec.ac.jp/kyuukou/kyuukou.html"
+        
+        #webページを開いてhtmlに返す
+        charset = nil
+        html = open(ky_url, 'r:Shift_JIS') do |page|
+            page.read
+        end
+        
+        #htmlを解析してオブジェクトを作成
+        doc = Nokogiri::HTML.parse(html, nil)
+        
+        ky_flag = 0
+        ky_counter = 1
+        while doc.search("table tr[#{i}] td[4]").inner_text.empty? == false
+            if subjects.any? {|m| doc.search("table tr[#{i}] td[4]").inner_text.include? m}
+                ky_cl = doc.search("table tr[#{i}] td[1]").inner_text
+                ky_date = doc.search("table tr[#{i}] td[2]").inner_text
+                ky_period = doc.search("table tr[#{i}] td[3]").inner_text
+                ky_subject = doc.search("table tr[#{i}] td[4]").inner_text
+                ky_teacher = doc.search("table tr[#{i}] td[5]").inner_text
+                client.update("[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})")
+                ky_flag = 1
+            end
+            ky_counter = ky_counter + 1
+        end
+        
+        if ky_flag == 0
+            client.update("現在休講情報は出ていません。")
+        end
+    end
+    
     
     
     #３秒待機
     sleep 3
+    
+    
+    
 end

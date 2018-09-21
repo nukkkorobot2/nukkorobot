@@ -88,6 +88,7 @@ PLATFORMS
 DEPENDENCIES
   google-api-client
   google_drive
+  nokogiri
   twitter
 
 BUNDLED WITH
