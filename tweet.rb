@@ -272,20 +272,22 @@ loop do
                   end
                   
                   
-                  
-                  #ツイート読み込み用カウンタが0の時初期位置を更新
-                  if i == 0
-                      sinceid = tweet.id unless tweet.retweeted?
-                  end
-                  #ツイート読み込み用カウンタ更新
-                  i = i + 1
-                  
-                  
                   #エタフォ
                   client.favorite(tweet.id)
                   
             end
+          
+          #ツイート読み込み用カウンタが0の時初期位置を更新
+          if i == 0
+              sinceid = tweet.id unless tweet.retweeted?
+          end
+          #ツイート読み込み用カウンタ更新
+          i = i + 1
+          
+          
        end
+      
+      
     #ループカウンタ更新
     counter = counter + 1
     
