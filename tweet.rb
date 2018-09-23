@@ -104,7 +104,7 @@ client.update("起動完了\n(#{DateTime.now})")
 
 
 #タイムライン初期位置
-sinceid = client.list_timeline("nukkoro_bot", "test").first.id
+sinceid = client.list_timeline("nukkoro_bot", "tl-list").first.id
 loop do
   
       #ツイート読み込み数カウンタ
