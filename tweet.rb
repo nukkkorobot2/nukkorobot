@@ -162,6 +162,7 @@ loop do
                   #天気用フラグ
                   max_flag = 1
                   min_flag = 1
+                  no_weather = 0
                   
                   #天気予報ブロック
                   if weather_word.any? {|m| tweet.text.include? m} && tweet.text.include?("@nukkoro_bot") == true
@@ -199,12 +200,16 @@ loop do
                           temperature = today_weather['temperature']
                           max_temperature = temperature['max']
                           min_temperature = temperature['min']
-                          elsif tweet.text.include?("明後日") || tweet.text.include?("あさって") || tweet.text.include?("明日の明日")
-                          today_weather = result['forecasts'][2]
-                          temperature = today_weather['temperature']
-                          max_temperature = temperature['max']
-                          min_temperature = temperature['min']
+                      elsif tweet.text.include?("明後日") || tweet.text.include?("あさって") || tweet.text.include?("明日の明日")
+                          if result['forecasts'][2] != nil
+                              today_weather = result['forecasts'][2]
+                              temperature = today_weather['temperature']
+                              max_temperature = temperature['max']
+                              min_temperature = temperature['min']
                           else
+                              no_weather = 1
+                          end
+                      else
                           today_weather = result['forecasts'][0]
                           temperature = today_weather['temperature']
                           max_temperature = temperature['max']
@@ -219,6 +224,11 @@ loop do
                       end
                       
                       #天気予報をリプライで返信
+                      if no_weather = 1
+                          client.update"@#{tweet.user.screen_name} \n#{city}の明後日の天気予報はまだ出ていません。", in_reply_to_status_id: tweet.id)
+                      end
+                      
+                      
                       if max_flag == 1 && min_flag == 1
                           client.update("@#{tweet.user.screen_name} \n#{city}の#{today_weather['dateLabel']}の天気は#{today_weather['telop']}\n最高気温:#{max_temperature['celsius']}℃\n最低気温:#{min_temperature['celsius']}℃", in_reply_to_status_id: tweet.id)
                           elsif max_flag == 1 && min_flag == 0
