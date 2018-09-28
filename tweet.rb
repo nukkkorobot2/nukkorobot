@@ -224,8 +224,8 @@ loop do
                       end
                       
                       #天気予報をリプライで返信
-                      if no_weather = 1
-                          client.update"@#{tweet.user.screen_name} \n#{city}の明後日の天気予報はまだ出ていません。", in_reply_to_status_id: tweet.id)
+                      if no_weather == 1
+                          client.update("@#{tweet.user.screen_name} \n#{city}の明後日の天気予報はまだ出ていません。", in_reply_to_status_id: tweet.id)
                       end
                       
                       
