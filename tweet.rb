@@ -9,6 +9,7 @@ require 'googleauth'
 require 'googleauth/stores/file_token_store'
 require 'fileutils'
 require 'nokogiri'
+require "mechanize"
 
 
 ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
@@ -252,25 +253,29 @@ loop do
                       #スクレイピング先のurl
                       ky_url = "http://kyoumu.office.uec.ac.jp/kyuukou/kyuukou.html"
                       
-                      #webページを開いてhtmlに返す
-                      charset = nil
-                      html = open(ky_url, 'r:Shift_JIS') do |page|
-                          page.read
-                      end
-                      
-                      #htmlを解析してオブジェクトを作成
-                      doc = Nokogiri::HTML.parse(html, nil)
+                      #webページを開いてhtmlのオブジェクトを作成,代入
+                      agent = Mechanize.new
+                      page = agent.get(ky_url)
+                      doc = page.root
                       
                       ky_flag = 0
                       ky_counter = 1
-                      while doc.search("table tr[#{i}] td[4]").inner_text.empty? == false
-                          if subjects.any? {|m| doc.search("table tr[#{i}] td[4]").inner_text.include? m}
-                              ky_cl = doc.search("table tr[#{i}] td[1]").inner_text
-                              ky_date = doc.search("table tr[#{i}] td[2]").inner_text
-                              ky_period = doc.search("table tr[#{i}] td[3]").inner_text
-                              ky_subject = doc.search("table tr[#{i}] td[4]").inner_text
-                              ky_teacher = doc.search("table tr[#{i}] td[5]").inner_text
+                      while doc.search("table tr[#{ky_counter}] td[4]").inner_text.empty? == false
+                          if subjects.any? {|m| doc.search("table tr[#{ky_counter}] td[4]").inner_text.include? m}
+                              ky_cl = doc.search("table tr[#{ky_counter}] td[1]").inner_text
+                              ky_date = doc.search("table tr[#{ky_counter}] td[2]").inner_text
+                              ky_period = doc.search("table tr[#{ky_counter}] td[3]").inner_text
+                              ky_subject = doc.search("table tr[#{ky_counter}] td[4]").inner_text
+                              ky_teacher = doc.search("table tr[#{ky_counter}] td[5]").inner_text
                               client.update("@#{tweet.user.screen_name}\n[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})", in_reply_to_status_id: tweet.id)
+                              ky_flag = 1
+                          elsif doc.search("table tr[#{ky_counter = ky_counter}] td[1]").inner_text.include?("全学")
+                              ky_cl = doc.search("table tr[#{ky_counter = ky_counter}] td[1]").inner_text
+                              ky_date = doc.search("table tr[#{ky_counter = ky_counter}] td[2]").inner_text
+                              ky_period = doc.search("table tr[#{ky_counter = ky_counter}] td[3]").inner_text
+                              ky_subject = doc.search("table tr[#{ky_counter = ky_counter}] td[4]").inner_text
+                              ky_teacher = doc.search("table tr[#{ky_counter = ky_counter}] td[5]").inner_text
+                              client.update("[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})")
                               ky_flag = 1
                           end
                           ky_counter = ky_counter + 1
@@ -327,15 +332,13 @@ loop do
         #スクレイピング先のurl
         ky_url = "http://kyoumu.office.uec.ac.jp/kyuukou/kyuukou.html"
         
-        #webページを開いてhtmlに返す
-        charset = nil
-        html = open(ky_url, 'r:Shift_JIS') do |page|
-            page.read
-        end
+        #webページを開いてhtmlのオブジェクトを作成
+        agent = Mechanize.new
+        page = agent.get(ky_url)
+        doc = page.root
         
-        #htmlを解析してオブジェクトを作成
-        doc = Nokogiri::HTML.parse(html, nil)
         
+        #ページ内から該当箇所を検索
         ky_flag = 0
         ky_counter = 1
         while doc.search("table tr[#{i}] td[4]").inner_text.empty? == false
