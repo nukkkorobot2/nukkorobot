@@ -269,7 +269,7 @@ loop do
                               ky_teacher = doc.search("table tr[#{ky_counter}] td[5]").inner_text
                               client.update("@#{tweet.user.screen_name}\n[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})", in_reply_to_status_id: tweet.id)
                               ky_flag = 1
-                          elsif doc.search("table tr[#{ky_counter = ky_counter}] td[1]").inner_text.include?("全学")
+                          elsif doc.search("table tr[#{ky_counter = ky_counter}] td[1]").inner_text.include?("全科目")
                               ky_cl = doc.search("table tr[#{ky_counter = ky_counter}] td[1]").inner_text
                               ky_date = doc.search("table tr[#{ky_counter = ky_counter}] td[2]").inner_text
                               ky_period = doc.search("table tr[#{ky_counter = ky_counter}] td[3]").inner_text
@@ -350,7 +350,7 @@ loop do
                 ky_teacher = doc.search("table tr[#{ky_counter = ky_counter}] td[5]").inner_text
                 client.update("[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})")
                 ky_flag = 1
-            elsif doc.search("table tr[#{ky_counter = ky_counter}] td[1]").inner_text.include?("全学")
+            elsif doc.search("table tr[#{ky_counter = ky_counter}] td[1]").inner_text.include?("全科目")
                 ky_cl = doc.search("table tr[#{ky_counter = ky_counter}] td[1]").inner_text
                 ky_date = doc.search("table tr[#{ky_counter = ky_counter}] td[2]").inner_text
                 ky_period = doc.search("table tr[#{ky_counter = ky_counter}] td[3]").inner_text
