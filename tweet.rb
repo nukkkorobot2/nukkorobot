@@ -275,7 +275,7 @@ loop do
                               ky_period = doc.search("table tr[#{ky_counter = ky_counter}] td[3]").inner_text
                               ky_subject = doc.search("table tr[#{ky_counter = ky_counter}] td[4]").inner_text
                               ky_teacher = doc.search("table tr[#{ky_counter = ky_counter}] td[5]").inner_text
-                              client.update("[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})")
+                              client.update("@#{tweet.user.screen_name}\n[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})", in_reply_to_status_id: tweet.id)
                               ky_flag = 1
                           end
                           ky_counter = ky_counter + 1
