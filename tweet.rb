@@ -134,9 +134,9 @@ loop do
                       save_flag = 1
                   end
                   
-                  if save_flag == 1
-                      client.retweet(tweet.id)
-                  end
+                  #if save_flag == 1
+                  #    client.retweet(tweet.id)
+                  #end
                   
                   #画像返信ブロック
                   if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
@@ -317,9 +317,9 @@ loop do
     if now.minute == 0
         if now.second >= 0 && now.second <= 5
             if now.hour >= 15
-                client.update("ぬっころBOTが#{now.hour-15}時ごろをお知らせします。")
+                client.update("ぬっころBOTが#{now.hour-15}時ごろをお知らせします。\nBOTは正常に稼働中です。")
                 else
-                client.update("ぬっころBOTが#{now.hour+9}時ごろをお知らせします。")
+                client.update("ぬっころBOTが#{now.hour+9}時ごろをお知らせします。\nBOTは正常に稼働中です。")
             end
             
         end
@@ -327,8 +327,10 @@ loop do
     
     
     
-    #休講情報取得
+    #休講情報取得&TV番組表取得
     if now.hour == 15 && now.minute == 0 && now.second >= 0 && now.second <= 5
+        
+        
         #スクレイピング先のurl
         ky_url = "http://kyoumu.office.uec.ac.jp/kyuukou/kyuukou.html"
         
@@ -349,7 +351,6 @@ loop do
                 ky_subject = doc.search("table tr[#{ky_counter}] td[4]").inner_text
                 ky_teacher = doc.search("table tr[#{ky_counter}] td[5]").inner_text
                 client.update("[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})")
-                ky_flag = 1
             elsif doc.search("table tr[#{ky_counter}] td[1]").inner_text.include?("全科目")
                 ky_cl = doc.search("table tr[#{ky_counter}] td[1]").inner_text
                 ky_date = doc.search("table tr[#{ky_counter}] td[2]").inner_text
@@ -357,14 +358,53 @@ loop do
                 ky_subject = doc.search("table tr[#{ky_counter}] td[4]").inner_text
                 ky_teacher = doc.search("table tr[#{ky_counter}] td[5]").inner_text
                 client.update("[休講情報]\n#{ky_cl}\n#{ky_date}(#{ky_period}時限目)\n#{ky_subject}(#{ky_teacher})")
-                ky_flag = 1
             end
             ky_counter = ky_counter + 1
         end
         
-        if ky_flag == 0
-            client.update("現在休講情報は出ていません。")
+        
+        
+        
+        #スクレイピング先のurl
+        t_y = DateTime.now.year
+        t_m = DateTime.now.month
+        if t_m < 10
+            t_m = "0" + "#{t_m}"
         end
+        t_d = DateTime.now.day
+        t_d = t_d + 1
+        if t_d < 10
+            t_d = "0" + "#{t_d}"
+        end
+        
+        tv_url = "https://tv.yahoo.co.jp/search/?q=%E4%B9%83%E6%9C%A8%E5%9D%82&t=1%202%203&a=23&oa=%2B1&d=#{t_y}#{t_m}#{t_d}"
+        
+        
+        #htmlを解析、オブジェクトを作成
+        agent = Mechanize.new
+        page = agent.get(tv_url)
+        tv_pr = page.root
+        
+        #ページ内を検索、ヒットしたらツイート
+        tv_counter = 1
+        while tv_counter < 20
+            if tv_pr.search("div.mb15 ul.programlist li[#{tv_counter}]").inner_text.empty? == false
+                tv_date = tv_pr.search("div.mb15 ul.programlist li[#{tv_counter}] div.leftarea p[1] em").inner_text
+                tv_time = tv_pr.search("div.mb15 ul.programlist li[#{tv_counter}] div.leftarea p[2] em").inner_text
+                tv_title = tv_pr.search("div.mb15 ul.programlist li[#{tv_counter}] div.rightarea p[1]").inner_text
+                tv_comment = tv_pr.search("div.mb15 ul.programlist li[#{tv_counter}] div.rightarea p[3]").inner_text
+                tv_ch = tv_pr.search("div.mb15 ul.programlist li[#{tv_counter}] div.rightarea p[2] span.pr35").inner_text
+                tv_text = "[テレビ情報]\n#{tv_ch}  #{tv_date} (#{tv_time})\n\n｢#{tv_title}｣\n\n#{tv_comment}"
+                if tv_text.length < 141
+                    client.update(tv_text)
+                    else
+                    client.update("#{tv_text[0,139]}…")
+                    client.update("…#{tv_text[139,279]}")
+                end
+            end
+            tv_counter = tv_counter + 1
+        end
+
     end
     
     
