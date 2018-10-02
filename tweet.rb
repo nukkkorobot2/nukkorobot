@@ -318,10 +318,26 @@ loop do
     now = DateTime.now
     if now.minute == 0
         if now.second >= 0 && now.second <= 5
+            
+            #今日はなんの日
+            today_is_url = "https://ja.wikipedia.org/wiki/Template:今日は何の日"
+            
+            #htmlを解析、オブジェクトを作成
+            agent = Mechanize.new
+            page = agent.get(today_is_url)
+            today_is = page.root
+            
+            while today_is.search("div.mw-parser-output ul li[#{today_counter}]").inner_text.empty? == false
+                today_counter = today_counter + 1
+            end
+            
+            today_counter = rand(today_counter - 1) + 1
+            today_text = today_is.search("div.mw-parser-output ul li[#{today_counter}]").inner_text
+            
             if now.hour >= 15
-                client.update("ぬっころBOTが#{now.hour-15}時ごろをお知らせします。\nBOTは正常に稼働中です。")
+                client.update("ぬっころBOTが#{now.hour-15}時ごろをお知らせします。\n。今日、#{now.month}月#{now.day}日は#{today_text}")
                 else
-                client.update("ぬっころBOTが#{now.hour+9}時ごろをお知らせします。\nBOTは正常に稼働中です。")
+                client.update("ぬっころBOTが#{now.hour+9}時ごろをお知らせします。\n今日、#{now.month}月#{now.day}日は#{today_text}")
             end
             
         end
