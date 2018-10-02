@@ -334,11 +334,8 @@ loop do
             today_counter = rand(today_counter - 1) + 1
             today_text = today_is.search("div.mw-parser-output ul li[#{today_counter}]").inner_text
             
-            if now.hour >= 15
-                client.update("ぬっころBOTが#{now.hour-15}時ごろをお知らせします。\n。今日、#{Time.now.month}月#{Time.now.day}日は#{today_text}")
-                else
-                client.update("ぬっころBOTが#{now.hour+9}時ごろをお知らせします。\n今日、#{Time.now.month}月#{Time.now.day}日は#{today_text}")
-            end
+            
+            client.update("ぬっころBOTが#{now.hour}時ごろをお知らせします。\n。今日、#{now.month}月#{now.day}日は#{today_text}")
             
         end
     end
@@ -346,7 +343,7 @@ loop do
     
     
     #休講情報取得&TV番組表取得
-    if now.hour == 15 && now.minute == 0 && now.second >= 0 && now.second <= 5
+    if now.hour == 0 && now.minute == 0 && now.second >= 0 && now.second <= 5
         
         
         #スクレイピング先のurl
