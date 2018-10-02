@@ -91,6 +91,8 @@ weather_word = ["天気","てんき","気温","きおん"]
 #履修科目
 subjects = ["知的財産権","技術者倫理","ハードウェアセキュリティ","ユビキタスネットワーク","デジタル信号処理","コンテンツセキュリティ","ネットワークセキュリティ",
             "暗号理論","データベース論","ソフトウェアセキュリティ","Technical English Intermediate English for Science"]
+#検索したいワード
+tv_search = ["乃木坂"]
 
 
 #カウンタ
@@ -134,9 +136,9 @@ loop do
                       save_flag = 1
                   end
                   
-                  #if save_flag == 1
-                  #    client.retweet(tweet.id)
-                  #end
+                  if save_flag == 1
+                      client.retweet(tweet.id)
+                  end
                   
                   #画像返信ブロック
                   if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
