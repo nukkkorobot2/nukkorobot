@@ -326,7 +326,7 @@ loop do
             agent = Mechanize.new
             page = agent.get(today_is_url)
             today_is = page.root
-            
+            today_counter = 1
             while today_is.search("div.mw-parser-output ul li[#{today_counter}]").inner_text.empty? == false
                 today_counter = today_counter + 1
             end
