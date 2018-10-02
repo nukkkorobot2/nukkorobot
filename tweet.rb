@@ -335,9 +335,9 @@ loop do
             today_text = today_is.search("div.mw-parser-output ul li[#{today_counter}]").inner_text
             
             if now.hour >= 15
-                client.update("ぬっころBOTが#{now.hour-15}時ごろをお知らせします。\n。今日、#{now.month}月#{now.day}日は#{today_text}")
+                client.update("ぬっころBOTが#{now.hour-15}時ごろをお知らせします。\n。今日、#{Time.now.month}月#{Time.now.day}日は#{today_text}")
                 else
-                client.update("ぬっころBOTが#{now.hour+9}時ごろをお知らせします。\n今日、#{now.month}月#{now.day}日は#{today_text}")
+                client.update("ぬっころBOTが#{now.hour+9}時ごろをお知らせします。\n今日、#{Time.now.month}月#{Time.now.day}日は#{today_text}")
             end
             
         end
