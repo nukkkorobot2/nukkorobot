@@ -318,10 +318,8 @@ loop do
     now = DateTime.now
     if now.minute == 0
         if now.second >= 0 && now.second <= 5
-            
             #今日はなんの日
             today_is_url = "https://ja.wikipedia.org/wiki/Template:今日は何の日"
-            
             #htmlを解析、オブジェクトを作成
             agent = Mechanize.new
             page = agent.get(today_is_url)
@@ -330,13 +328,18 @@ loop do
             while today_is.search("div.mw-parser-output ul li[#{today_counter}]").inner_text.empty? == false
                 today_counter = today_counter + 1
             end
-            
             today_counter = rand(today_counter - 1) + 1
             today_text = today_is.search("div.mw-parser-output ul li[#{today_counter}]").inner_text
-            
-            
             client.update("ぬっころBOTが#{now.hour}時ごろをお知らせします。\n。今日、#{now.month}月#{now.day}日は#{today_text}")
-            
+            #メモツイート
+            query = "From:nukkoron #ぬっころメモ"
+            client.search(query, count: 10, result_type: "recent",  exclude: "retweets", since_id: nil).take(10).each do |status|
+                if status.text.include?("nukkoro_bot")
+                    client.update("[メモ]#{status.text[13,140]}\n\n##{Time.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
+                else
+                client.update("[メモ]#{status.text}\n\n##{Time.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
+                end
+            end
         end
     end
     
