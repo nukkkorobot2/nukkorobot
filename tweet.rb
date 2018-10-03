@@ -317,7 +317,7 @@ loop do
     #時報
     now = DateTime.now
     if now.minute == 0
-        if now.second >= 0 && now.second <= 5
+        if now.second >= 0 && now.second <= 3
             #今日はなんの日
             today_is_url = "https://ja.wikipedia.org/wiki/Template:今日は何の日"
             #htmlを解析、オブジェクトを作成
@@ -335,9 +335,9 @@ loop do
             query = "From:nukkoron #ぬっころメモ"
             client.search(query, count: 10, result_type: "recent",  exclude: "retweets", since_id: nil).take(30).each do |status|
                 if status.text.include?("nukkoro_bot")
-                    client.update("[メモ]#{status.text[13,140]}\n\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
+                    client.update("[メモ]\n#{status.text[13,140]}\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
                 else
-                    client.update("[メモ]#{status.text}\n\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
+                    client.update("[メモ]\n#{status.text}\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
                 end
             end
         end
