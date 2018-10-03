@@ -333,11 +333,11 @@ loop do
             client.update("ぬっころBOTが#{now.hour}時ごろをお知らせします。\n。今日、#{now.month}月#{now.day}日は#{today_text}")
             #メモツイート
             query = "From:nukkoron #ぬっころメモ"
-            client.search(query, count: 10, result_type: "recent",  exclude: "retweets", since_id: nil).take(10).each do |status|
+            client.search(query, count: 10, result_type: "recent",  exclude: "retweets", since_id: nil).take(30).each do |status|
                 if status.text.include?("nukkoro_bot")
-                    client.update("[メモ]#{status.text[13,140]}\n\n##{Time.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
+                    client.update("[メモ]#{status.text[13,140]}\n\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
                 else
-                client.update("[メモ]#{status.text}\n\n##{Time.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
+                    client.update("[メモ]#{status.text}\n\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
                 end
             end
         end
