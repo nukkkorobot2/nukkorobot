@@ -332,12 +332,14 @@ loop do
             today_text = today_is.search("div.mw-parser-output ul li[#{today_counter}]").inner_text
             client.update("ぬっころBOTが#{now.hour}時ごろをお知らせします。\n。今日、#{now.month}月#{now.day}日は#{today_text}")
             #メモツイート
-            query = "From:nukkoron #ぬっころメモ"
-            client.search(query, count: 10, result_type: "recent",  exclude: "retweets", since_id: nil).take(30).each do |status|
-                if status.text.include?("nukkoro_bot")
-                    client.update("[メモ]\n#{status.text[13,140]}\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
-                else
-                    client.update("[メモ]\n#{status.text}\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
+            if now.hour % 3 == 0
+                query = "From:nukkoron #ぬっころメモ"
+                client.search(query, count: 10, result_type: "recent",  exclude: "retweets", since_id: nil).take(30).each do |status|
+                    if status.text.include?("nukkoro_bot")
+                        client.update("[メモ]\n#{status.text[13,140]}\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
+                    else
+                        client.update("[メモ]\n#{status.text}\n##{now.hour}時のリマインド\nhttps://twitter.com/nukkoron/status/#{status.id}")
+                    end
                 end
             end
         end
