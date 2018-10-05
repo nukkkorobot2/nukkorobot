@@ -90,7 +90,7 @@ weather_word = ["天気","てんき","気温","きおん"]
 
 #履修科目
 subjects = ["知的財産権","技術者倫理","ハードウェアセキュリティ","ユビキタスネットワーク","デジタル信号処理","コンテンツセキュリティ","ネットワークセキュリティ",
-            "暗号理論","データベース論","ソフトウェアセキュリティ","Technical English Intermediate English for Science"]
+            "暗号理論","データベース論","ソフトウェアセキュリティ","Technical English Intermediate English for Science","歴史"]
 #検索したいワード
 tv_search = ["乃木坂"]
 
@@ -187,6 +187,132 @@ loop do
                           elsif tweet.text.include?("札幌") || tweet.text.include?("北海道")
                           wcity = "016010"
                           city = "札幌"
+                          elsif tweet.text.include?("青森") || tweet.text.include?("あおもり")
+                          wcity = "020010"
+                          city = "青森"
+                          elsif tweet.text.include?("岩手") || tweet.text.include?("いわて")
+                          wcity = "030010"
+                          city = "岩手"
+                          elsif tweet.text.include?("宮城") || tweet.text.include?("みやぎ")
+                          wcity = "040010"
+                          city = "宮城"
+                          elsif tweet.text.include?("秋田") || tweet.text.include?("あきた")
+                          wcity = "050010"
+                          city = "秋田"
+                          elsif tweet.text.include?("山形") || tweet.text.include?("やまがた")
+                          wcity = "060010"
+                          city = "山形"
+                          elsif tweet.text.include?("福島") || tweet.text.include?("ふくしま")
+                          wcity = "070010"
+                          city = "福島"
+                          elsif tweet.text.include?("茨城") || tweet.text.include?("いばらき")
+                          wcity = "080010"
+                          city = "茨城"
+                          elsif tweet.text.include?("栃木") || tweet.text.include?("とちぎ")
+                          wcity = "090010"
+                          city = "栃木"
+                          elsif tweet.text.include?("群馬") || tweet.text.include?("ぐんま")
+                          wcity = "100010"
+                          city = "群馬"
+                          elsif tweet.text.include?("埼玉") || tweet.text.include?("さいたま")
+                          wcity = "110010"
+                          city = "埼玉"
+                          elsif tweet.text.include?("新潟") || tweet.text.include?("にいがた")
+                          wcity = "150010"
+                          city = "新潟"
+                          elsif tweet.text.include?("富山") || tweet.text.include?("とやま")
+                          wcity = "160010"
+                          city = "富山"
+                          elsif tweet.text.include?("石川") || tweet.text.include?("いしかわ")
+                          wcity = "170010"
+                          city = "石川"
+                          elsif tweet.text.include?("福井") || tweet.text.include?("ふくい")
+                          wcity = "180010"
+                          city = "福井"
+                          elsif tweet.text.include?("山梨") || tweet.text.include?("やまなし")
+                          wcity = "190010"
+                          city = "山梨"
+                          elsif tweet.text.include?("長野") || tweet.text.include?("ながの")
+                          wcity = "100010"
+                          city = "長野"
+                          elsif tweet.text.include?("岐阜") || tweet.text.include?("ぎふ")
+                          wcity = "210010"
+                          city = "岐阜"
+                          elsif tweet.text.include?("静岡") || tweet.text.include?("しずおか")
+                          wcity = "220010"
+                          city = "静岡"
+                          elsif tweet.text.include?("愛知") || tweet.text.include?("あいち")
+                          wcity = "230010"
+                          city = "愛知"
+                          elsif tweet.text.include?("三重") || tweet.text.include?("みえ")
+                          wcity = "240010"
+                          city = "三重"
+                          elsif tweet.text.include?("滋賀") || tweet.text.include?("しが")
+                          wcity = "250010"
+                          city = "滋賀"
+                          elsif tweet.text.include?("京都") || tweet.text.include?("きょうと")
+                          wcity = "260010"
+                          city = "京都"
+                          elsif tweet.text.include?("大阪") || tweet.text.include?("おおさか")
+                          wcity = "270010"
+                          city = "大阪"
+                          elsif tweet.text.include?("兵庫") || tweet.text.include?("ひょうご")
+                          wcity = "280010"
+                          city = "兵庫"
+                          elsif tweet.text.include?("奈良") || tweet.text.include?("なら")
+                          wcity = "290010"
+                          city = "奈良"
+                          elsif tweet.text.include?("和歌山") || tweet.text.include?("わかやま")
+                          wcity = "300010"
+                          city = "和歌山"
+                          elsif tweet.text.include?("鳥取") || tweet.text.include?("とっとり")
+                          wcity = "310010"
+                          city = "鳥取"
+                          elsif tweet.text.include?("島根") || tweet.text.include?("しまね")
+                          wcity = "320010"
+                          city = "島根"
+                          elsif tweet.text.include?("岡山") || tweet.text.include?("おかやま")
+                          wcity = "330010"
+                          city = "岡山"
+                          elsif tweet.text.include?("広島") || tweet.text.include?("ひろしま")
+                          wcity = "340010"
+                          city = "広島"
+                          elsif tweet.text.include?("山口") || tweet.text.include?("やまぐち")
+                          wcity = "350010"
+                          city = "山口"
+                          elsif tweet.text.include?("徳島") || tweet.text.include?("とくしま")
+                          wcity = "360010"
+                          city = "徳島"
+                          elsif tweet.text.include?("香川") || tweet.text.include?("かがわ")
+                          wcity = "370010"
+                          city = "香川"
+                          elsif tweet.text.include?("愛媛") || tweet.text.include?("えひめ")
+                          wcity = "380010"
+                          city = "愛媛"
+                          elsif tweet.text.include?("高知") || tweet.text.include?("こうち")
+                          wcity = "390010"
+                          city = "愛媛"
+                          elsif tweet.text.include?("福岡") || tweet.text.include?("ふくおか")
+                          wcity = "400010"
+                          city = "福岡"
+                          elsif tweet.text.include?("佐賀") || tweet.text.include?("さが")
+                          wcity = "410010"
+                          city = "佐賀"
+                          elsif tweet.text.include?("長崎") || tweet.text.include?("ながさき")
+                          wcity = "420010"
+                          city = "長崎"
+                          elsif tweet.text.include?("熊本") || tweet.text.include?("くまもと")
+                          wcity = "430010"
+                          city = "熊本"
+                          elsif tweet.text.include?("大分") || tweet.text.include?("おおいた")
+                          wcity = "440010"
+                          city = "大分"
+                          elsif tweet.text.include?("宮崎") || tweet.text.include?("みやざき")
+                          wcity = "450010"
+                          city = "宮崎"
+                          elsif tweet.text.include?("鹿児島") || tweet.text.include?("かごしま")
+                          wcity = "460010"
+                          city = "鹿児島"
                           else
                           wcity = "130010"
                           city = "東京"
