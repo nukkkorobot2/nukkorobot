@@ -13,75 +13,118 @@ require "mechanize"
 
 begin
 
-ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
+    ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
 
-client = Twitter::REST::Client.new do |config|
-    config.consumer_key        = ENV['MY_CONSUMER_KEY']
-    config.consumer_secret     = ENV['MY_CONSUMER_SECRET']
-    config.access_token        = ENV['MY_ACCESS_TOKEN']
-    config.access_token_secret = ENV['MY_ACCESS_TOKEN_SECRET']
-end
+    client = Twitter::REST::Client.new do |config|
+        config.consumer_key        = ENV['MY_CONSUMER_KEY']
+        config.consumer_secret     = ENV['MY_CONSUMER_SECRET']
+        config.access_token        = ENV['MY_ACCESS_TOKEN']
+        config.access_token_secret = ENV['MY_ACCESS_TOKEN_SECRET']
+    end
 
-#google API 非公式
-session = GoogleDrive::Session.from_config("config.json")
+    #google API 非公式
+    session = GoogleDrive::Session.from_config("config.json")
 
-#google API 公式情報
-OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'.freeze
-APPLICATION_NAME = 'Drive API Ruby Quickstart'.freeze
-CREDENTIALS_PATH = 'credentials.json'.freeze
-TOKEN_PATH = 'token.yaml'.freeze
-SCOPE = Google::Apis::DriveV3::AUTH_DRIVE_METADATA_READONLY
+    #google API 公式情報
+    OOB_URI = 'urn:ietf:wg:oauth:2.0:oob'.freeze
+    APPLICATION_NAME = 'Drive API Ruby Quickstart'.freeze
+    CREDENTIALS_PATH = 'credentials.json'.freeze
+    TOKEN_PATH = 'token.yaml'.freeze
+    SCOPE = Google::Apis::DriveV3::AUTH_DRIVE_METADATA_READONLY
 
 
-def authorize
-    client_id = Google::Auth::ClientId.from_file(CREDENTIALS_PATH)
-    token_store = Google::Auth::Stores::FileTokenStore.new(file: TOKEN_PATH)
-    authorizer = Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
-    user_id = 'default'
-    credentials = authorizer.get_credentials(user_id)
-    if credentials.nil?
-        url = authorizer.get_authorization_url(base_url: OOB_URI)
-        puts 'Open the following URL in the browser and enter the ' \
-        "resulting code after authorization:\n" + url
-        code = gets
-        credentials = authorizer.get_and_store_credentials_from_code(
+    def authorize
+        client_id = Google::Auth::ClientId.from_file(CREDENTIALS_PATH)
+        token_store = Google::Auth::Stores::FileTokenStore.new(file: TOKEN_PATH)
+        authorizer = Google::Auth::UserAuthorizer.new(client_id, SCOPE, token_store)
+        user_id = 'default'
+        credentials = authorizer.get_credentials(user_id)
+        if credentials.nil?
+            url = authorizer.get_authorization_url(base_url: OOB_URI)
+            puts 'Open the following URL in the browser and enter the ' \
+            "resulting code after authorization:\n" + url
+            code = gets
+            credentials = authorizer.get_and_store_credentials_from_code(
                                                                      user_id: user_id, code: code, base_url: OOB_URI
                                                                      )
+        end
+        credentials
     end
-    credentials
-end
 
 
-#google API 公式
-service = Google::Apis::DriveV3::DriveService.new
-service.client_options.application_name = APPLICATION_NAME
-service.authorization = authorize
+    #google API 公式
+    service = Google::Apis::DriveV3::DriveService.new
+    service.client_options.application_name = APPLICATION_NAME
+    service.authorization = authorize
 
 
-#キューの定義
-class Array
-    alias_method :enqueue, :push
-    alias_method :dequeue, :shift
-end
-
-#短縮URL展開関数
-def expand_url(url)
-    begin
-        response = Net::HTTP.get_response(URI.parse(url))
-        rescue
-        return url
+    #キューの定義
+    class Array
+        alias_method :enqueue, :push
+        alias_method :dequeue, :shift
     end
-    case response
-        when Net::HTTPRedirection
-        expand_url(response['location'])
-        else
-        url
+
+    #短縮URL展開関数
+    def expand_url(url)
+        begin
+            response = Net::HTTP.get_response(URI.parse(url))
+            rescue
+            return url
+        end
+        case response
+            when Net::HTTPRedirection
+            expand_url(response['location'])
+            else
+            url
+            end
     end
-end
 
 
 
-#画像保存関数
+    #画像保存関数
+    def save_images(tweet,session,client)
+        #フラグ
+        save_flag = 0
+    
+        #画像保存ブロック
+        tweet.media.each do |media|
+            name = File.basename(media.media_url)
+            name = "/tmp/" + name
+            open(name, 'wb').write(open(media.media_url).read)
+            rename = tweet.user.name + name
+            #ドライブにアップロード
+            session.upload_from_file(name, rename, convert: false)
+            #save_flag
+            save_flag = 1
+        end
+    
+        if save_flag == 1
+            client.retweet(tweet.id)
+        end
+    end
+
+
+    #画像返信関数
+    def reply_images(tweet,session,client)
+        pictures = []
+        #最新200件取得
+        response = service.list_files(page_size: 200,
+                                      fields: 'nextPageToken, files(id, name)')
+                                      
+                                      response.files.each do |file|
+                                          pictures << file.name
+                                      end
+                                      
+                                      picture = session.file_by_title(pictures[rand(pictures.length)])
+                                      
+                                      picture.download_to_file("/tmp/test.jpg")
+                                      
+                                      client.update_with_media("@#{tweet.user.screen_name} ","/tmp/test.jpg", in_reply_to_status_id: tweet.id)
+    end
+
+
+
+
 
 
 
@@ -121,46 +164,12 @@ loop do
           
           if tweet.user.screen_name != "nukkoro_bot"
               
+              save_images(tweet,session,client)
               
-                  #フラグ
-                  save_flag = 0
-              
-                  #画像保存ブロック
-                  tweet.media.each do |media|
-                      name = File.basename(media.media_url)
-                      name = "/tmp/" + name
-                      open(name, 'wb').write(open(media.media_url).read)
-                      rename = tweet.user.name + name
-                      #ドライブにアップロード
-                      session.upload_from_file(name, rename, convert: false)
-                      #save_flag
-                      save_flag = 1
-                  end
-                  
-                  if save_flag == 1
-                      client.retweet(tweet.id)
-                  end
-                  
-                  #画像返信ブロック
-                  if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
-                      pictures = []
-                      
-                      #最新200件取得
-                      response = service.list_files(page_size: 200,
-                                                    fields: 'nextPageToken, files(id, name)')
-                                                    
-                      response.files.each do |file|
-                            pictures << file.name
-                      end
-                      
-                      picture = session.file_by_title(pictures[rand(pictures.length)])
-                      
-                      picture.download_to_file("/tmp/test.jpg")
-                      
-                      client.update_with_media("@#{tweet.user.screen_name} ","/tmp/test.jpg", in_reply_to_status_id: tweet.id)
-                  end
-                  
-                  
+              if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
+                  reply_images(tweet,session,client)
+              end
+            
                   
                   
                   #天気用フラグ
