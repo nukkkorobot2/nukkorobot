@@ -11,6 +11,7 @@ require 'fileutils'
 require 'nokogiri'
 require "mechanize"
 
+begin
 
 ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
 
@@ -560,4 +561,11 @@ loop do
     
     
     
+end
+
+rescue
+    sleep 300
+    retry
+
+
 end
