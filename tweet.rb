@@ -519,7 +519,6 @@ loop do
             t_m = "0" + "#{t_m}"
         end
         t_d = DateTime.now.day
-        t_d = t_d + 1
         if t_d < 10
             t_d = "0" + "#{t_d}"
         end
