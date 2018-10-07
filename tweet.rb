@@ -505,7 +505,7 @@ begin
                 time_tweet1(client,now)
             end
         end
-        if now.hour == 0 && now.minute == 0 && now.second >= 0 && now.second <= 4
+        if now.hour == 0 && now.minute == 0 && now.second >= 0 && now.second <= 6
             kyuko(client,nil,subjects)
             hukagawa_news(client)
             tv_program(client)
