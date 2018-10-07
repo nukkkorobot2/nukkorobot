@@ -425,19 +425,13 @@ end
 #main
 begin
     
-    #各種認証情報
-    #twitter各種キー
-    my_consumer_key = 'm9RFlLwKt6pq9JmwEG0iO1mpl'
-    my_consumer_secret = 'tsAJAJOfs8mKYfuCm4tY37GxkfHEZyT4C4dNtZeFfqnz8q1HQX'
-    my_access_token = '2377811581-fANvAA3s6L9szJv6XO3WfqWqZL3fkDcKdS8i9kC'
-    my_access_token_secret = 'SaXoU8YkSIC9avl51tcxFejvdyHu7assgWJ4UOPgKQFSg'
+    ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
     
-    #RESTapi取得
     client = Twitter::REST::Client.new do |config|
-        config.consumer_key = my_consumer_key
-        config.consumer_secret = my_consumer_secret
-        config.access_token = my_access_token
-        config.access_token_secret = my_access_token_secret
+        config.consumer_key        = ENV['MY_CONSUMER_KEY']
+        config.consumer_secret     = ENV['MY_CONSUMER_SECRET']
+        config.access_token        = ENV['MY_ACCESS_TOKEN']
+        config.access_token_secret = ENV['MY_ACCESS_TOKEN_SECRET']
     end
     
     #google API 非公式
