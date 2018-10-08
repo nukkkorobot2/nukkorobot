@@ -513,6 +513,7 @@ begin
         sleep 3
     end
 rescue
+client("ERROR:300秒待機します。\n#{DateTime.now}")
     sleep 300
     retry
 end
