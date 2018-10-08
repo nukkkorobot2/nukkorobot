@@ -382,7 +382,7 @@ def time_tweet1(client,now)
 end
 
 #TV番組情報取得メソッド
-def tv_program
+def tv_program(client)
     #スクレイピング先のurl
     t_y = DateTime.now.year
     t_m = DateTime.now.month
