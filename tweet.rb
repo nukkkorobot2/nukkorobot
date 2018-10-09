@@ -419,7 +419,57 @@ def tv_program(client)
     end
 end
 
+#家計簿記録メソッド
+def kakeibo(client,session,category, money)
+    sheet = session.spreadsheet_by_key("1d-qF1P666oAwqrAP1zyqSfc7yk9MvqCQfrGEoM2boN0").worksheets[0]
+    category_num = 1
+    loop do
+        category_num = category_num + 1
+        if category[0] == sheet[1,category_num]
+            break
+        end
+        if category_num == 10
+            client.update("ERORR:カテゴリが存在しません。\n#{DateTime.now}")
+            break
+        end
+    end
+    case category_num
+        when 2 then
+        col = "B"
+        when 4 then
+        col = "D"
+        when 6 then
+        col = "F"
+        when 8 then
+        col = "H"
+        else
+        client.update("ERROR:カテゴリが存在しません\n#{DateTime.now}")
+    end
+    new = 1
+    while sheet[new,category_num].empty? == false
+        new = new + 1
+    end
+    sheet[new,category_num - 1] = "#{DateTime.now.year}/#{DateTime.now.month}/#{DateTime.now.day}"
+    sheet[new,category_num] = money
+    sheet.save
+    sheet.reload
+    macth_text = "#{DateTime.now.year}\/#{DateTime.now.month}\/*"
+    mon_start = 2
+    while sheet[mon_start,category_num - 1] !~ /#{macth_text}/
+        mon_start = mon_start + 1
+    end
+    sheet[2,category_num] = "=SUM(#{col}#{mon_start}:#{col}#{new})"
+    sheet[2,12] = "=SUM(B2,D2,F2,H2)"
+    sheet.save
+    sheet.reload
+    client.update("[家計簿]\n#{DateTime.now.year}年#{DateTime.now.month}月の出費\n食費:　　#{sheet[2,2]}円\n交際費:　#{sheet[2,4]}円\nクレカ:　#{sheet[2,6]}円\nその他:　#{sheet[2,8]}円\n\n合計:  #{sheet[2,12]}円")
+end
 
+#家計簿参照メソッド
+def view_kakeibo(client,session)
+    sheet = session.spreadsheet_by_key("1d-qF1P666oAwqrAP1zyqSfc7yk9MvqCQfrGEoM2boN0").worksheets[0]
+    client.update("[家計簿]\n#{DateTime.now.year}年#{DateTime.now.month}月の出費\n食費:　　#{sheet[2,2]}円\n交際費:　#{sheet[2,4]}円\nクレカ:　#{sheet[2,6]}円\nその他:　#{sheet[2,8]}円\n\n合計:  #{sheet[2,12]}円")
+end
 
 
 #main
@@ -457,6 +507,9 @@ begin
     subjects = ["知的財産権","技術者倫理","ハードウェアセキュリティ","ユビキタスネットワーク","デジタル信号処理","コンテンツセキュリティ","ネットワークセキュリティ",
    "暗号理論","データベース論","ソフトウェアセキュリティ","Technical English Intermediate English for Science","歴史"]
    
+    #家計簿カテゴリ
+    categories = ["食費","交際費","クレカ","その他"]
+   
     #ループカウンタ
     counter = 0
    
@@ -484,6 +537,11 @@ begin
                 if tweet.text.include?("nukkoro_bot") && tweet.text.include?("休講")
                     kyuko(client,tweet,subjects)
                 end
+                if tweet.user.screen_name == "nukkoron" && categories.any? {|m| tweet.text.include? m}
+                    money = tweet.text[/([0-9])+/]
+                    category = categories.select { |n| tweet.text.include? n}
+                    kakeibo(client,session,category, money)
+                end
                 client.favorite(tweet.id)
             end
             #ツイート読み込み用カウンタが0の時初期位置を更新
@@ -500,12 +558,15 @@ begin
             client.update("現在#{counter}回目のループです。\n#{DateTime.now}")
         end
         now = DateTime.now
+        if now.hour == 23 && now.minute == 30 && now.second >= 0 && now.second <= 3
+            view_kakeibo(client,session)
+        end
         if now.minute == 0
             if now.second >= 0 && now.second <= 3
                 time_tweet1(client,now)
             end
         end
-        if now.hour == 0 && now.minute == 0 && now.second >= 0 && now.second <= 6
+        if now.hour == 0 && now.minute == 0 && now.second >= 0 && now.second <= 5
             kyuko(client,nil,subjects)
             hukagawa_news(client)
             tv_program(client)
