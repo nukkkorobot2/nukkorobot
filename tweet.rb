@@ -468,7 +468,7 @@ end
 #家計簿参照メソッド
 def view_kakeibo(client,session)
     sheet = session.spreadsheet_by_key("1d-qF1P666oAwqrAP1zyqSfc7yk9MvqCQfrGEoM2boN0").worksheets[0]
-    client.update("[家計簿]\n#{DateTime.now.year}年#{DateTime.now.month}月の出費\n食費:　　#{sheet[2,2]}円\n交際費:　#{sheet[2,4]}円\nクレカ:　#{sheet[2,6]}円\nその他:　#{sheet[2,8]}円\n\n合計:  #{sheet[2,12]}円")
+    client.update("[家計簿]\n#{DateTime.now.year}年#{DateTime.now.month}月の出費\n食費:　　#{sheet[2,2]}円\n交際費:　#{sheet[2,4]}円\nクレカ:　#{sheet[2,6]}円\nその他:　#{sheet[2,8]}円\n\n合計:  #{sheet[2,12]}円\n#{DateTime.now}")
 end
 
 
