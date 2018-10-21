@@ -542,7 +542,7 @@ begin
                     category = categories.select { |n| tweet.text.include? n}
                     kakeibo(client,session,category, money)
                 end
-                client.favorite(tweet.id)
+                #client.favorite(tweet.id)
             end
             #ツイート読み込み用カウンタが0の時初期位置を更新
             if i == 0
