@@ -62,7 +62,7 @@ def hukagawa_news(client)
     news = page.root
     i = 1
     while i < 3
-        if news.search("div.content_wrap ul li[#{i}] div.date").inner_text == "#{DateTime.now.year}.{DateTime.now.month}.{DateTime.now.day}"
+        if news.search("div.content_wrap ul li[#{i}] div.date").inner_text == "#{DateTime.now.year}.{DateTime.now.month}.{DateTime.now.day - 1}"
             text1 = news.search("div.content_wrap ul li[#{i}] h5").inner_text
             text2 = news.search("div.content_wrap ul li[#{i}] p").inner_text
             full_text = "#{text1}" + "\n" + "#{text2}" + "\n" + "#{url}"
@@ -505,7 +505,7 @@ begin
    
     #履修科目
     subjects = ["知的財産権","技術者倫理","ハードウェアセキュリティ","ユビキタスネットワーク","デジタル信号処理","コンテンツセキュリティ","ネットワークセキュリティ",
-   "暗号理論","データベース論","ソフトウェアセキュリティ","Technical English Intermediate English for Science","歴史"]
+   "暗号理論","データベース論","ソフトウェアセキュリティ","Technical English Intermediate English for Science","歴史学"]
    
     #家計簿カテゴリ
     categories = ["食費","交際費","クレカ","その他"]
