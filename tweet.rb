@@ -62,13 +62,16 @@ def hukagawa_news(client)
     news = page.root
     i = 1
     while i < 3
-        if news.search("div.content_wrap ul li[#{i}] div.date").inner_text == "#{DateTime.now.year}.{DateTime.now.month}.{DateTime.now.day - 1}"
+        if news.search("div.content_wrap ul li[#{i}] div.date").inner_text == "#{DateTime.now.year}.#{DateTime.now.month}.#{DateTime.now.day - 1}"
             text1 = news.search("div.content_wrap ul li[#{i}] h5").inner_text
             text2 = news.search("div.content_wrap ul li[#{i}] p").inner_text
             full_text = "#{text1}" + "\n" + "#{text2}" + "\n" + "#{url}"
             client.update("[深川麻衣]\n#{full_text[0,131]}…")
-            if full_text.length > 131
+            if full_text.length > 131 && full_text.length < 270
                 client.update("…#{full_text[131,full_text.length]}")
+            elsif full_text.length >270
+                client.update("…#{full_text[131,268]}…")
+                client.update("…#{full_text[269,full_text.length]}")
             end
         end
         i = i + 1
