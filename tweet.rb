@@ -584,11 +584,11 @@ begin
                 #メモ記録
                 if tweet.user.screen_name == "nukkoron" && tweet.text.include?("#ぬっころメモ")
                     content = tweet.text.delete("#ぬっころメモ")
-                    content = content.delete("@nukkoro_bot")
+                    content = content.delete("@nukkoro_bot ")
                     memo(client,session,content)
                 end
                 #メモ確認
-                if tweet.user.screen_name == "nukkoron" && tweet.text.include?("#ぬっころメモ")
+                if tweet.user.screen_name == "nukkoron" && tweet.text.include?("メモ")
                     view_memo(client,session)
                 end
                 #メモ削除
