@@ -510,7 +510,7 @@ end
 
 
 #main
-#begin
+begin
     
     ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
     
@@ -582,16 +582,16 @@ end
                     kakeibo(client,session,category, money)
                 end
                 #メモ記録
-                if tweet.user.screen_name == "nukkoron" && tweet.include?("#ぬっころメモ")
+                if tweet.user.screen_name == "nukkoron" && tweet.text.include?("#ぬっころメモ")
                     content = tweet.text.delete("#ぬっころメモ")
                     memo(client,session,content)
                 end
                 #メモ確認
-                if tweet.user.screen_name == "nukkoron" && tweet.include?("#ぬっころメモ")
+                if tweet.user.screen_name == "nukkoron" && tweet.text.include?("#ぬっころメモ")
                     view_memo(client,session)
                 end
                 #メモ削除
-                if tweet.user.screen_name == "nukkoron" && tweet.include?("削除")
+                if tweet.user.screen_name == "nukkoron" && tweet.text.include?("削除")
                     num = tweet.text[/([0-9])+/]
                     rm_memo(session,num)
                 end
@@ -630,9 +630,9 @@ end
         end
         sleep 3
     end
-#rescue
-#   client.update("ERROR:300秒待機します。\n#{DateTime.now}")
-#   sleep 300
-#   retry
-#end
+rescue
+   client.update("ERROR:300秒待機します。\n#{DateTime.now}")
+   sleep 300
+   retry
+end
 
