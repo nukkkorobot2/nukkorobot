@@ -593,7 +593,8 @@ begin
                 end
                 #メモ削除
                 if tweet.user.screen_name == "nukkoron" && tweet.text.include?("削除")
-                    num = tweet.text.to_i
+                    num = tweet.text[/([0-9])+/]
+                    num = num.to_i
                     rm_memo(session,num)
                 end
                 #エタフォ
