@@ -62,7 +62,7 @@ def hukagawa_news(client)
     news = page.root
     i = 1
     while i < 3
-        if news.search("div.content_wrap ul li[#{i}] div.date").inner_text == "#{DateTime.now.year}.#{DateTime.now.month}.#{DateTime.now.day - 1}"
+        if news.search("div.content_wrap ul li[#{i}] div.date").inner_text == "#{DateTime.now.year}.#{DateTime.now.month}.#{DateTime.now.day - 1}" && news.search("div.content_wrap ul li[#{i}] div.date").inner_text == "#{DateTime.now.year}.#{DateTime.now.month}.0#{DateTime.now.day-1}"
             text1 = news.search("div.content_wrap ul li[#{i}] h5").inner_text
             text2 = news.search("div.content_wrap ul li[#{i}] p").inner_text
             full_text = "#{text1}" + "\n" + "#{text2}" + "\n" + "#{url}"
@@ -474,6 +474,40 @@ def view_kakeibo(client,session)
     client.update("[家計簿]\n#{DateTime.now.year}年#{DateTime.now.month}月の出費\n食費:　　#{sheet[2,2]}円\n交際費:　#{sheet[2,4]}円\nクレカ:　#{sheet[2,6]}円\nその他:　#{sheet[2,8]}円\n\n合計:  #{sheet[2,12]}円\n#{DateTime.now}")
 end
 
+#メモ記入
+def memo(client,session,content)
+    sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
+    new = 1
+    while sheet[new,2].empty? == false
+        new = new + 1
+    end
+    sheet[new,1] = "#{DateTime.now.year}/#{DateTime.now.month}/#{DateTime.now.day}"
+    sheet.save
+    sheet.reload
+    sheet[new,2] = "#{content}"
+    sheet.save
+    sheet.reload
+end
+
+#メモ削除
+def rm_memo(session,num)
+    sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
+    sheet[num,1] = ""
+    sheet[num,2] = ""
+    sheet.save
+    sheet.reload
+end
+
+#メモ表示
+def view_memo(client,session)
+    sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
+    (3..sheet.num_rows).each do |row|
+        if sheet[row,2].empty? == false
+            client.update("[メモ#{row}]\n#{sheet[row,2]}")
+        end
+    end
+end
+
 
 #main
 begin
@@ -537,15 +571,32 @@ begin
                 if tweet.text.include?("@nukkoro_bot") && tweet.text.include?("状態")
                     client.update("@#{tweet.user.screen_name}\nBOTは正常に稼働しています。\n現在#{counter}回目のループです。",in_reply_to_status_id: tweet.id)
                 end
+                #休講情報
                 if tweet.text.include?("nukkoro_bot") && tweet.text.include?("休講")
                     kyuko(client,tweet,subjects)
                 end
+                #家計簿記録
                 if tweet.user.screen_name == "nukkoron" && categories.any? {|m| tweet.text.include? m}
                     money = tweet.text[/([0-9])+/]
                     category = categories.select { |n| tweet.text.include? n}
                     kakeibo(client,session,category, money)
                 end
-                #client.favorite(tweet.id)
+                #メモ記録
+                if tweet.user.screen_name == "nukkoron" && tweet.include?("#ぬっころメモ")
+                    content = tweet.text.delete("#ぬっころメモ")
+                    memo(client,session,content)
+                end
+                #メモ確認
+                if tweet.user.screen_name == "nukkoron" && tweet.include?("#ぬっころメモ")
+                    view_memo(client,session)
+                end
+                #メモ削除
+                if tweet.user.screen_name == "nukkoron" && tweet.include?("削除")
+                    num = tweet.text[/([0-9])+/]
+                    rm_memo(session,num)
+                end
+                #エタフォ
+                client.favorite(tweet.id)
             end
             #ツイート読み込み用カウンタが0の時初期位置を更新
             if i == 0
@@ -565,8 +616,11 @@ begin
             view_kakeibo(client,session)
         end
         if now.minute == 0
-            if now.second >= 0 && now.second <= 3
+            if now.second >= 0 && now.second <= 2
                 time_tweet1(client,now)
+                if now.hour % 3 == 0
+                    view_memo(client,session)
+                end
             end
         end
         if now.hour == 0 && now.minute == 0 && now.second >= 0 && now.second <= 5
