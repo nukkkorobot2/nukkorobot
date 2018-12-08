@@ -492,8 +492,8 @@ end
 #メモ削除
 def rm_memo(session,num)
     sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
-    sheet[num,1] = ""
-    sheet[num,2] = ""
+    sheet[num+2,1] = ""
+    sheet[num+2,2] = ""
     sheet.save
     sheet.reload
 end
@@ -502,7 +502,7 @@ end
 def view_memo(client,session)
     sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
     (3..sheet.num_rows).each do |row|
-        if sheet[row,2].empty? == false
+        if sheet[row - 2,2].empty? == false
             client.update("[メモ#{row}]\n#{sheet[row,2]}\n\n#{DateTime.now.hour}:#{DateTime.now.minute}:#{DateTime.now.second}のリマインド")
         end
     end
@@ -593,7 +593,7 @@ begin
                 end
                 #メモ削除
                 if tweet.user.screen_name == "nukkoron" && tweet.text.include?("削除")
-                    num = tweet.text[/([0-9])+/]
+                    num = tweet.text.to_i
                     rm_memo(session,num)
                 end
                 #エタフォ
