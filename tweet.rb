@@ -510,7 +510,7 @@ end
 
 
 #main
-begin
+#begin
     
     ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
     
@@ -643,9 +643,10 @@ begin
         end
         sleep 3
     end
-rescue
-   client.update("ERROR:300秒待機します。\n[#{DateTime.now}]")
-   sleep 300
-   retry
-end
+    #rescue
+    #   client.update("ERROR:300秒待機します。\n[#{DateTime.now}]")
+    #sleep 300
+    #retry
+    #end
+
 
