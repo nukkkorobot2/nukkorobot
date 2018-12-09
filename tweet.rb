@@ -562,6 +562,7 @@ end
             if tweet.user.screen_name != "nukkoro_bot"
                 #save_images(client,session,tweet) #画像保存
                 #画像を含む場合RT
+                media_frag = 0
                 tweet.media.each do |media|
                     media_frag = 1
                 end
