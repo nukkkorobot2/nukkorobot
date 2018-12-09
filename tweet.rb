@@ -503,14 +503,14 @@ def view_memo(client,session)
     sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
     (3..sheet.num_rows).each do |row|
         if sheet[row - 2,2].empty? == false
-            client.update("[メモ#{row-2}]\n\n#{sheet[row,2]}\n\n\n-Remider at #{DateTime.now.hour}:#{DateTime.now.minute}-")
+            client.update("[メモ#{row-2}]\n#{sheet[row,2]}\n\n-Remider at #{DateTime.now.hour}:#{DateTime.now.minute}-")
         end
     end
 end
 
 
 #main
-#begin
+begin
     
     ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
     
@@ -649,10 +649,10 @@ end
         end
         sleep 3
     end
-    #rescue
-    #   client.update("ERROR:300秒待機します。\n[#{DateTime.now}]")
-    #sleep 300
-    #retry
-    #end
+rescue
+    client.update("ERROR:300秒待機します。\n[#{DateTime.now}]")
+    sleep 300
+    retry
+end
 
 
