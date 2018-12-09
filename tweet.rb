@@ -560,15 +560,24 @@ begin
         #タイムライン読み込み
         client.list_timeline("nukkoro_bot", "tl-list", since_id: sinceid, count: 3).each do |tweet|
             if tweet.user.screen_name != "nukkoro_bot"
-                save_images(client,session,tweet) #画像保存
+                #save_images(client,session,tweet) #画像保存
+                #画像を含む場合RT
+                tweet.media.each do |media|
+                    media_frag = 1
+                end
+                if media_frag == 1
+                    client.retweet(tweet.id)
+                end
                 if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
                    reply_images(client,service,session,tweet)
                 end
                 if weather_word.any? {|m| tweet.text.include? m} && tweet.text.include?("@nukkoro_bot") == true
                    weather_forecast(client,tweet)
+                   client.favorite(tweet.id)
                 end
                 #状態返信
                 if tweet.text.include?("@nukkoro_bot") && tweet.text.include?("状態")
+                    client.favorite(tweet.id)
                     client.update("@#{tweet.user.screen_name}\nBOTは正常に稼働しています。\n現在#{counter}回目のループです。",in_reply_to_status_id: tweet.id)
                 end
                 #休講情報
@@ -586,6 +595,7 @@ begin
                     content = tweet.text.delete("#ぬっころメモ")
                     content = content.delete("@nukkoro_bot ")
                     memo(client,session,content)
+                    client.favorite(tweet.id)
                 end
                 #メモ確認
                 if tweet.user.screen_name == "nukkoron" && tweet.text.include?("メモ")
@@ -596,9 +606,10 @@ begin
                     num = tweet.text[/([0-9])+/]
                     num = num.to_i
                     rm_memo(session,num)
+                    client.favorite(tweet.id)
                 end
                 #エタフォ
-                client.favorite(tweet.id)
+                #client.favorite(tweet.id)
             end
             #ツイート読み込み用カウンタが0の時初期位置を更新
             if i == 0
@@ -633,7 +644,7 @@ begin
         sleep 3
     end
 rescue
-   client.update("ERROR:300秒待機します。\n#{DateTime.now}")
+   client.update("ERROR:300秒待機します。\n[#{DateTime.now}]")
    sleep 300
    retry
 end
