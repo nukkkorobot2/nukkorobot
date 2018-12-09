@@ -567,7 +567,12 @@ end
                     media_frag = 1
                 end
                 if media_frag == 1
-                    client.retweet(tweet.id)
+                    begin
+                        client.retweet(tweet.id)
+                    rescue Twitter::Error::Forbidden
+                        next
+                    end
+                    
                 end
                 if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
                    reply_images(client,service,session,tweet)
