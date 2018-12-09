@@ -639,7 +639,7 @@ begin
                 time_tweet1(client,now)
             end
         end
-        if now.minute == 30
+        if now.minute == 30 && now.second >= 0 && now.second <= 2
             view_memo(client,session)
         end
         if now.hour == 0 && now.minute == 0 && now.second >= 0 && now.second <= 5
