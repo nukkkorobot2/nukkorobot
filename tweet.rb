@@ -503,7 +503,7 @@ def view_memo(client,session)
     sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
     (3..sheet.num_rows).each do |row|
         if sheet[row - 2,2].empty? == false
-            client.update("[メモ#{row-2}]\n#{sheet[row,2]}\n\n#{DateTime.now.hour}:#{DateTime.now.minute}:#{DateTime.now.second}のリマインド")
+            client.update("[メモ#{row-2}]\n\n#{sheet[row,2]}\n\n\n-Remider at #{DateTime.now.hour}:#{DateTime.now.minute}-")
         end
     end
 end
@@ -609,9 +609,9 @@ begin
         end
         #ループカウンタ更新
         counter = counter + 1
-        #ループカウンタが2000の倍数でツイート
-        if counter % 1000 == 0 || counter == 1
-            client.update("現在#{counter}回目のループです。\n#{DateTime.now}")
+        #bot起動時ツイート
+        if counter == 1
+            client.update("BOTが再起動しました\n現在#{counter}回目のループです。\n#{DateTime.now}")
         end
         now = DateTime.now
         if now.hour == 23 && now.minute == 30 && now.second >= 0 && now.second <= 3
@@ -620,10 +620,10 @@ begin
         if now.minute == 0
             if now.second >= 0 && now.second <= 2
                 time_tweet1(client,now)
-                if now.hour % 3 == 0
-                    view_memo(client,session)
-                end
             end
+        end
+        if now.minute == 30
+            view_memo(client,session)
         end
         if now.hour == 0 && now.minute == 0 && now.second >= 0 && now.second <= 5
             kyuko(client,nil,subjects)
