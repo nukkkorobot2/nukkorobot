@@ -653,7 +653,7 @@ begin
             end
         end
         if now.minute == 15 && now.second >= 0 && now.second <= 2
-            nogi_news(client)
+            #nogi_news(client)
         end
         if now.minute == 30 && now.second >= 0 && now.second <= 2
             view_memo(client,session)
