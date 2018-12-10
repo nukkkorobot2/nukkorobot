@@ -515,11 +515,12 @@ def nogi_news(client)
     agent = Mechanize.new
     page = agent.get(url)
     news = page.root
-    news.search("div.clearfix table span.item_title_list").inner_text.each do | text |
+    puts news.search("div.clearfix table tr[3] span.item_title_list").inner_text
+    for i in 1..10 do
+        text = news.search("div.clearfix table tr[#{i+2}] span.item_title_list").inner_text
         client.update("[NEWS]\n#{text}\n\nhttp://nogikeyaki46ch.atna.jp/")
     end
 end
-
 
 
 #main
@@ -653,7 +654,7 @@ begin
             end
         end
         if now.minute == 15 && now.second >= 0 && now.second <= 2
-            #nogi_news(client)
+            nogi_news(client)
         end
         if now.minute == 30 && now.second >= 0 && now.second <= 2
             view_memo(client,session)
