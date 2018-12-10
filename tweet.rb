@@ -508,13 +508,16 @@ def view_memo(client,session)
     end
 end
 
+
 def nogi_news(client)
     url = "http://nogikeyaki46ch.atna.jp/"
     #htmlを解析、オブジェクトを作成
     agent = Mechanize.new
     page = agent.get(url)
     news = page.root
-    client.update("#{news.search('div.clearfix table span.item_title_list').inner_text}\n\nhttp://nogikeyaki46ch.atna.jp/")
+    news.search("div.clearfix table span.item_title_list").inner_text.each do | text |
+        client.update("[NEWS]\n#{text}\n\nhttp://nogikeyaki46ch.atna.jp/")
+    end
 end
 
 
