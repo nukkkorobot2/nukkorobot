@@ -508,6 +508,16 @@ def view_memo(client,session)
     end
 end
 
+def nogi_news(client)
+    url = "http://nogikeyaki46ch.atna.jp/"
+    #htmlを解析、オブジェクトを作成
+    agent = Mechanize.new
+    page = agent.get(url)
+    news = page.root
+    client.update("#{news.search('div.clearfix table span.item_title_list').inner_text}\n\nhttp://nogikeyaki46ch.atna.jp/")
+end
+
+
 
 #main
 begin
@@ -638,6 +648,9 @@ begin
             if now.second >= 0 && now.second <= 2
                 time_tweet1(client,now)
             end
+        end
+        if now.minute == 15 && now.second >= 0 && now.second <= 2
+            nogi_news(client)
         end
         if now.minute == 30 && now.second >= 0 && now.second <= 2
             view_memo(client,session)
