@@ -478,7 +478,7 @@ end
 def memo(client,session,content)
     sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
     new = 1
-    while sheet[new,2].empty? == false
+    while sheet[new,2].empty? == false && sheet[new,2] != ""
         new = new + 1
     end
     sheet[new,1] = "#{DateTime.now.year}/#{DateTime.now.month}/#{DateTime.now.day}"
@@ -502,7 +502,7 @@ end
 def view_memo(client,session)
     sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
     (3..sheet.num_rows).each do |row|
-        if sheet[row - 2,2].empty? == false
+        if sheet[row - 2,2].empty? == false && sheet[row - 2,2] != ""
             client.update("[メモ#{row-2}]\n#{sheet[row,2]}\n\n-Remider at #{DateTime.now.hour}:#{DateTime.now.minute}-")
         end
     end
@@ -516,7 +516,7 @@ def nogi_news(client)
     page = agent.get(url)
     news = page.root
     puts news.search("div.clearfix table tr[3] span.item_title_list").inner_text
-    for i in 1..10 do
+    for i in 3..1 do
         text = news.search("div.clearfix table tr[#{i+2}] span.item_title_list").inner_text
         client.update("[NEWS]\n#{text}\n\nhttp://nogikeyaki46ch.atna.jp/")
     end
@@ -653,8 +653,10 @@ begin
                 time_tweet1(client,now)
             end
         end
-        if now.minute == 15 && now.second >= 0 && now.second <= 2
-            nogi_news(client)
+        if now.minute == 15 || now.minute == 30 || now.minute == 45 || now.minute == 0
+            if now.second >= 0 && now.second <= 2
+                nogi_news(client)
+            end
         end
         if now.minute == 30 && now.second >= 0 && now.second <= 2
             view_memo(client,session)
