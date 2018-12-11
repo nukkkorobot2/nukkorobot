@@ -516,8 +516,8 @@ def nogi_news(client)
     page = agent.get(url)
     news = page.root
     puts news.search("div.clearfix table tr[3] span.item_title_list").inner_text
-    for i in 3..1 do
-        text = news.search("div.clearfix table tr[#{i+2}] span.item_title_list").inner_text
+    for i in 1..3 do
+        text = news.search("div.clearfix table tr[#{5-i}] span.item_title_list").inner_text
         client.update("[NEWS]\n#{text}\n\nhttp://nogikeyaki46ch.atna.jp/")
     end
 end
@@ -654,7 +654,7 @@ begin
             end
         end
         if now.minute == 15 || now.minute == 30 || now.minute == 45 || now.minute == 0
-            if now.second >= 0 && now.second <= 2
+            if now.second >= 0 && now.second <= 3
                 nogi_news(client)
             end
         end
