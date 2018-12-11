@@ -502,7 +502,7 @@ end
 def view_memo(client,session)
     sheet = session.spreadsheet_by_key("1oNhzfd8yVd8B8E2adjhZO_qc7KrUzLNHnQdkE3B3FcA").worksheets[0]
     (3..sheet.num_rows).each do |row|
-        if sheet[row - 2,2].empty? == false && sheet[row - 2,2] != ""
+        if sheet[row,2].empty? == false && sheet[row,2] != ""
             client.update("[メモ#{row-2}]\n#{sheet[row,2]}\n\n-Remider at #{DateTime.now.hour}:#{DateTime.now.minute}-")
         end
     end
