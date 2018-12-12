@@ -535,8 +535,9 @@ def trans_from_En_to_Ja(client,text,tweet)
     endpoint = OAuth::AccessToken.new(consumer)
     response = endpoint.post(url,{key: translate_key, type: 'json', name: name, text: text, split: 1})
     result = JSON.parse(response.body)
+    content = result['resultset']['result']['text']
     
-    client.update("@#{tweet.user.screen_name}\n #{result['resultset']['result']['text']}",in_reply_to_status_id: tweet.id)
+    client.update("@#{tweet.user.screen_name}\n #{content}",in_reply_to_status_id: tweet.id)
 end
 
 #日本語から英語の翻訳
@@ -550,8 +551,9 @@ def trans_from_Ja_to_En(client,text,tweet)
     endpoint = OAuth::AccessToken.new(consumer)
     response = endpoint.post(url,{key: translate_key, type: 'json', name: name, text: text, split: 1})
     result = JSON.parse(response.body)
+    content = result['resultset']['result']['text']
     
-    client.update("@#{tweet.user.screen_name}\n #{result['resultset']['result']['text']}",in_reply_to_status_id: tweet.id)
+    client.update("@#{tweet.user.screen_name}\n #{content}",in_reply_to_status_id: tweet.id)
 end
     
     
