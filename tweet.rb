@@ -527,9 +527,9 @@ end
 #英語から日本語の翻訳
 def trans_from_En_to_Ja(client,text,tweet)
     #認証情報
-    translate_key= 'MY_TRANSLATE_KEY'
-    translate_secret= 'MY_TRANSLATE_SECRET'
-    name = 'MY_TRANSLATE_NAME'
+    translate_key= MY_TRANSLATE_KEY
+    translate_secret= MY_TRANSLATE_SECRET
+    name = MY_TRANSLATE_NAME
     url="https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalN_en_ja/"
     consumer = OAuth::Consumer.new(translate_key, translate_secret)
     endpoint = OAuth::AccessToken.new(consumer)
@@ -543,9 +543,9 @@ end
 #日本語から英語の翻訳
 def trans_from_Ja_to_En(client,text,tweet)
     #認証情報
-    translate_key = 'MY_TRANSLATE_KEY'
-    translate_secret = 'MY_TRANSLATE_SECRET'
-    name = 'MY_TRANSLATE_NAME'
+    translate_key = MY_TRANSLATE_KEY
+    translate_secret = MY_TRANSLATE_SECRET
+    name = MY_TRANSLATE_NAME
     url="https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalN_ja_en/"
     consumer = OAuth::Consumer.new(translate_key, translate_secret)
     endpoint = OAuth::AccessToken.new(consumer)
