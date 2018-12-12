@@ -680,7 +680,6 @@ end
                 #エタフォ
                 begin
                     #client.favorite(tweet.id)
-                    1 = 1
                     rescue Twitter::Error::Forbidden
                     next
                 end
