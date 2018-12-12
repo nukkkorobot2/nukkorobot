@@ -552,7 +552,7 @@ def trans_from_Ja_to_En(client,text,tweet)
     response = endpoint.post(url,{key: translate_key, type: 'json', name: name, text: text, split: 1})
     result = JSON.parse(response.body)
     content = result['resultset']['result']['text']
-    
+    client.update(result)
     client.update("@#{tweet.user.screen_name}\n #{content}",in_reply_to_status_id: tweet.id)
 end
     
