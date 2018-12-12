@@ -10,6 +10,7 @@ require 'googleauth/stores/file_token_store'
 require 'fileutils'
 require 'nokogiri'
 require "mechanize"
+require 'oauth'
 
 
 
@@ -523,6 +524,39 @@ def nogi_news(client)
 end
 
 
+#英語から日本語の翻訳
+def trans_from_En_to_Ja(client,text,tweet)
+    #認証情報
+    translate_key= 'MY_TRANSLATE_KEY'
+    translate_secret= 'MY_TRANSLATE_SECRET'
+    name = 'MY_TRANSLATE_NAME'
+    url="https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalN_en_ja/"
+    consumer = OAuth::Consumer.new(translate_key, translate_secret)
+    endpoint = OAuth::AccessToken.new(consumer)
+    response = endpoint.post(url,{key: translate_key, type: 'json', name: name, text: text, split: 1})
+    result = JSON.parse(response.body)
+    
+    client.update("@#{tweet.user.screen_name}\n #{result['resultset']['result']['text']}",in_reply_to_status_id: tweet.id)
+end
+
+#日本語から英語の翻訳
+def trans_from_Ja_to_En(client,text,tweet)
+    #認証情報
+    translate_key = 'MY_TRANSLATE_KEY'
+    translate_secret = 'MY_TRANSLATE_SECRET'
+    name = 'MY_TRANSLATE_NAME'
+    url="https://mt-auto-minhon-mlt.ucri.jgn-x.jp/api/mt/generalN_ja_en/"
+    consumer = OAuth::Consumer.new(translate_key, translate_secret)
+    endpoint = OAuth::AccessToken.new(consumer)
+    response = endpoint.post(url,{key: translate_key, type: 'json', name: name, text: text, split: 1})
+    result = JSON.parse(response.body)
+    
+    client.update("@#{tweet.user.screen_name}\n #{result['resultset']['result']['text']}",in_reply_to_status_id: tweet.id)
+end
+    
+    
+    
+    
 #main
 #begin
     
@@ -573,8 +607,10 @@ end
         i = 0
         #タイムライン読み込み
         client.list_timeline("nukkoro_bot", "tl-list", since_id: sinceid, count: 3).each do |tweet|
+            #自分以外のアカウントのツイートを取得した時の処理
             if tweet.user.screen_name != "nukkoro_bot"
-                #save_images(client,session,tweet) #画像保存
+                #画像保存
+                #save_images(client,session,tweet)
                 #画像を含む場合RT
                 media_frag = 0
                 tweet.media.each do |media|
@@ -588,9 +624,11 @@ end
                     end
                     
                 end
+                #画像返信
                 if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
                    reply_images(client,service,session,tweet)
                 end
+                #天気予報
                 if weather_word.any? {|m| tweet.text.include? m} && tweet.text.include?("@nukkoro_bot") == true
                    weather_forecast(client,tweet)
                    client.favorite(tweet.id)
@@ -627,9 +665,25 @@ end
                     num = num.to_i
                     rm_memo(session,num)
                     client.favorite(tweet.id)
+                    view_memo(client,session)
+                end
+                if tweet.text.include?("#和英翻訳")
+                    trans_je_text = tweet.text.delete("#和英翻訳")
+                    trans_je_text = tweet.text.delete("@nukkoro_bot ")
+                    trans_from_Ja_to_En(client,trans_je_text,tweet)
+                end
+                if tweet.text.include?("#英和翻訳")
+                    trans_ej_text = tweet.text.delete("#英和翻訳")
+                    trans_ej_text = tweet.text.delete("@nukkoro_bot ")
+                    trans_from_En_to_Ja(client,trans_ej_text,tweet)
                 end
                 #エタフォ
-                #client.favorite(tweet.id)
+                begin
+                    #client.favorite(tweet.id)
+                    1 = 1
+                    rescue Twitter::Error::Forbidden
+                    next
+                end
             end
             #ツイート読み込み用カウンタが0の時初期位置を更新
             if i == 0
@@ -644,28 +698,35 @@ end
         if counter == 1
             client.update("BOTが再起動しました\n現在#{counter}回目のループです。\n#{DateTime.now}")
         end
+        #現時刻に対する処理
         now = DateTime.now
+        #家計簿参照
         if now.hour == 23 && now.minute == 30 && now.second >= 0 && now.second <= 3
             view_kakeibo(client,session)
         end
+        #時報ツイート
         if now.minute == 0
             if now.second >= 0 && now.second <= 2
                 time_tweet1(client,now)
             end
         end
+        #坂道ニュース
         if now.minute == 15 || now.minute == 30 || now.minute == 45 || now.minute == 0
             if now.second >= 0 && now.second <= 3
                 nogi_news(client)
             end
         end
+        #メモツイート
         if now.minute == 30 && now.second >= 0 && now.second <= 2
             view_memo(client,session)
         end
+        #休講情報ツイート
         if now.hour == 0 && now.minute == 0 && now.second >= 0 && now.second <= 5
             kyuko(client,nil,subjects)
             hukagawa_news(client)
             tv_program(client)
         end
+        #待機3秒
         sleep 3
     end
     #rescue
