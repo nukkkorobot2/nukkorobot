@@ -66,6 +66,7 @@ GEM
     nokogiri (1.8.4)
       mini_portile2 (~> 2.3.0)
     ntlm-http (0.1.1)
+    oauth (0.5.4)
     os (1.0.0)
     public_suffix (3.0.2)
     representable (3.0.4)
@@ -105,7 +106,8 @@ DEPENDENCIES
   google_drive
   mechanize
   nokogiri
+  oauth
   twitter
 
 BUNDLED WITH
-   1.16.3
+   1.17.1
