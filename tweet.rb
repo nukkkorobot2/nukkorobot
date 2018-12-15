@@ -712,7 +712,7 @@ end
             end
         end
         #坂道ニュース
-        if now.minute == 15 || now.minute == 30 || now.minute == 45 || now.minute == 0
+        if now.minute == 3 || now.minute == 18 || now.minute == 33 || now.minute == 48
             if now.second >= 0 && now.second <= 3
                 nogi_news(client)
             end
@@ -730,10 +730,10 @@ end
         #待機3秒
         sleep 3
     end
-    #rescue
-    #client.update("ERROR:300秒待機します。\n[#{DateTime.now}]")
-    #sleep 300
-    #retry
-    #end
+rescue
+    #Error処理
+    client.update("ERROR:30秒待機します。\n[#{DateTime.now}]")
+    sleep 30
+    retry
+end
 
-    #aaaa
