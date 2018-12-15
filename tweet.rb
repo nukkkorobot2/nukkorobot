@@ -509,7 +509,7 @@ def view_memo(client,session)
     end
 end
 
-
+#乃木坂まとめ
 def nogi_news(client)
     url = "http://nogikeyaki46ch.atna.jp/"
     #htmlを解析、オブジェクトを作成
@@ -519,7 +519,11 @@ def nogi_news(client)
     puts news.search("div.clearfix table tr[3] span.item_title_list").inner_text
     for i in 1..3 do
         text = news.search("div.clearfix table tr[#{5-i}] span.item_title_list").inner_text
-        client.update("[NEWS]\n#{text}\n\nhttp://nogikeyaki46ch.atna.jp/")
+        begin
+            client.update("[NEWS]\n#{text}\n\nhttp://nogikeyaki46ch.atna.jp/")
+        rescue
+            next
+        end
     end
 end
 
