@@ -564,7 +564,7 @@ end
     
     
 #main
-#begin
+begin
     
     ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
     
