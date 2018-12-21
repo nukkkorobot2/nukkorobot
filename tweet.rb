@@ -656,8 +656,8 @@ begin
                 end
                 #メモ記録
                 if tweet.user.screen_name == "nukkoron" && tweet.text.include?("#ぬっころメモ")
-                    content = tweet.text.delete("#ぬっころメモ")
-                    content = content.delete("@nukkoro_bot ")
+                    content = tweet.text.slice!("#ぬっころメモ")
+                    content = content.slice!("@nukkoro_bot ")
                     memo(client,session,content)
                     client.favorite(tweet.id)
                 end
@@ -674,12 +674,12 @@ begin
                     view_memo(client,session)
                 end
                 if tweet.text.include?("#和英翻訳")
-                    trans_je_text = tweet.text.delete("#和英翻訳")
+                    trans_je_text = tweet.text.slice!("#和英翻訳")
                     trans_je_text.slice!("@nukkoro_bot ")
                     trans_from_Ja_to_En(client,trans_je_text,tweet)
                 end
                 if tweet.text.include?("#英和翻訳")
-                    trans_ej_text = tweet.text.delete("#英和翻訳")
+                    trans_ej_text = tweet.text.slice!("#英和翻訳")
                     trans_ej_text.slice!("@nukkoro_bot ")
                     trans_from_En_to_Ja(client,trans_ej_text,tweet)
                 end
