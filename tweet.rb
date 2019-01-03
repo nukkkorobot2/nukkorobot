@@ -737,9 +737,9 @@ begin
         #待機3秒
         sleep 3
     end
-rescue
+rescue Exception => er
     #Error処理
-    client.update("ERROR:30秒待機します。\n[#{DateTime.now}]")
+    client.update("ERROR:30秒待機します。\n#{ex.backtrace.first}:#{ex.message} (#{ex.class})\n[#{DateTime.now}]")
     sleep 30
     retry
 end
