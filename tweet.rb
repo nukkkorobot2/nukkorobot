@@ -13,7 +13,6 @@ require "mechanize"
 require 'oauth'
 
 
-
 #googledrive認証メソッド
 def authorize
     client_id = Google::Auth::ClientId.from_file(CREDENTIALS_PATH)
