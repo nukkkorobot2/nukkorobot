@@ -515,7 +515,6 @@ def nogi_news(client)
     agent = Mechanize.new
     page = agent.get(url)
     news = page.root
-    puts news.search("div.clearfix table tr[3] span.item_title_list").inner_text
     for i in 1..3 do
         text = news.search("div.clearfix table tr[#{5-i}] span.item_title_list").inner_text
         begin
