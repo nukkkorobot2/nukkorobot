@@ -626,7 +626,6 @@ begin
                     rescue Twitter::Error::Forbidden
                         next
                     end
-                    
                 end
                 #画像返信
                 if tweet.text.include?("美少女") && tweet.text.include?("@nukkoro_bot")
@@ -672,6 +671,7 @@ begin
                     client.favorite(tweet.id)
                     view_memo(client,session)
                 end
+                #翻訳
                 if tweet.text.include?("#和英翻訳")
                     trans_je_text = tweet.text.dup
                     trans_je_text.slice!("#和英翻訳")
@@ -683,6 +683,10 @@ begin
                     trans_ej_text.slice!("#英和翻訳")
                     trans_ej_text.slice!("@nukkoro_bot ")
                     trans_from_En_to_Ja(client,trans_ej_text,tweet)
+                end
+                #のぎおびRT
+                if tweet.user.screen_name == "SHOWROOM_jp" && tweet.text.include?("#乃木坂46")
+                    client.retweet(tweet.id)
                 end
                 #エタフォ
                 begin
@@ -735,7 +739,7 @@ begin
         #待機3秒
         sleep 3
     end
-rescue Exception => er
+rescue Exception => ex
     #Error処理
     client.update("ERROR:30秒待機します。\n[#{DateTime.now}]")
     client.update("ERROR:#{ex.backtrace.first}:#{ex.message} (#{ex.class})\n[#{DateTime.now}]")
