@@ -589,11 +589,20 @@ begin
     
     ENV['SSL_CERT_FILE'] = File.expand_path('./cacert.pem')
     
+    #nukkoro_bot
     client = Twitter::REST::Client.new do |config|
         config.consumer_key        = ENV['MY_CONSUMER_KEY']
         config.consumer_secret     = ENV['MY_CONSUMER_SECRET']
         config.access_token        = ENV['MY_ACCESS_TOKEN']
         config.access_token_secret = ENV['MY_ACCESS_TOKEN_SECRET']
+    end
+    
+    #nukkoron
+    client2 = Twitter::REST::Client.new do |config|
+        config.consumer_key        = ENV['MY_CONSUMER_KEY2']
+        config.consumer_secret     = ENV['MY_CONSUMER_SECRET2']
+        config.access_token        = ENV['MY_ACCESS_TOKEN2']
+        config.access_token_secret = ENV['MY_ACCESS_TOKEN_SECRET2']
     end
     
     #google API 非公式
@@ -760,13 +769,13 @@ begin
             tv_program(client)
         end
         #天気ツイート
-        if now.hour == 21 && now.minute == 52 && now.second >= 0 && now.second <= 3
-            weather_tweet(client)
+        if now.hour == 22 && now.minute == 30 && now.second >= 0 && now.second <= 3
+            weather_tweet(client2)
         end
         #待機3秒
         sleep 3
     end
-rescue Exception => ex
+rescue => ex
     #Error処理
     client.update("ERROR:30秒待機します。\n[#{DateTime.now}]")
     client.update("ERROR:#{ex.backtrace.first}:#{ex.message} (#{ex.class})\n[#{DateTime.now}]")
