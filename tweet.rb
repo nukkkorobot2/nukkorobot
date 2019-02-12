@@ -760,7 +760,9 @@ begin
             tv_program(client)
         end
         #天気ツイート
-        if now.hour == 21 && now.minute == 49 && now.second >= 0 && now.second <= 3
+        if now.hour == 21 && now.minute == 52 && now.second >= 0 && now.second <= 3
+            weather_tweet(client)
+        end
         #待機3秒
         sleep 3
     end
