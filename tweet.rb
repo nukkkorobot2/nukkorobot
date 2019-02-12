@@ -278,14 +278,14 @@ def weather_forecast(client,tweet)
         max_temperature = temperature['max']
         min_temperature = temperature['min']
         elsif tweet.text.include?("明後日") || tweet.text.include?("あさって") || tweet.text.include?("明日の明日")
-        if result['forecasts'][2] != nil
-            today_weather = result['forecasts'][2]
-            temperature = today_weather['temperature']
-            max_temperature = temperature['max']
-            min_temperature = temperature['min']
+            if result['forecasts'][2] != nil
+                today_weather = result['forecasts'][2]
+                temperature = today_weather['temperature']
+                max_temperature = temperature['max']
+                min_temperature = temperature['min']
             else
-            no_weather = 1
-        end
+                no_weather = 1
+            end
         else
         today_weather = result['forecasts'][0]
         temperature = today_weather['temperature']
@@ -311,6 +311,29 @@ def weather_forecast(client,tweet)
         else
         client.update("@#{tweet.user.screen_name} \n#{city}の#{today_weather['dateLabel']}の天気は#{today_weather['telop']}\n最高気温:no data\n最低気温:no data", in_reply_to_status_id: tweet.id)
     end
+end
+
+#天気予報
+def weather_tweet(client)
+    #天気情報取得
+    uri = URI.parse("http://weather.livedoor.com/forecast/webservice/json/v1?city=130010")
+    json = Net::HTTP.get(uri)
+    result = JSON.parse(json)
+    today_weather = result['forecasts'][1]
+    temperature = today_weather['temperature']
+    max_temperature = temperature['max']
+    min_temperature = temperature['min']
+    if max_temperature == nil
+        max_temperature = "no data"
+    else
+        max_temperature = max_temperature['celsius']
+    end
+    if min_temperature == nil
+        min_temperature = "no data"
+    else
+        min_temperature = min_temperature['celsius']
+    end
+    client.update("明日の天気は#{today_weather['telop']}。最高気温は#{max_temperature}℃、最低気温は#{min_temperature}℃でしょう。")
 end
 
 #休講情報
@@ -589,7 +612,7 @@ begin
     service.authorization = authorize
    
     #エゴサ用
-    my_name = ["ぬこ", "ぬっころ", "ヌッコロ", "闇猫", "やみ猫", "闇ねこ", "やみねこ"]
+    my_name = ["ぬこ", "ぬっころ", "ヌッコロ", "闇猫", "やみ猫", "ぬーぬぬ", "ねこ", "ぬえぇ", "ぬぇ"]
     weather_word = ["天気","てんき","気温","きおん"]
    
     #履修科目
@@ -736,6 +759,8 @@ begin
             hukagawa_news(client)
             tv_program(client)
         end
+        #天気ツイート
+        if now.hour == 21 && now.minute == 49 && now.second >= 0 && now.second <= 3
         #待機3秒
         sleep 3
     end
