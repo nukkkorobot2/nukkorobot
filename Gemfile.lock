@@ -107,7 +107,7 @@ DEPENDENCIES
   mechanize
   nokogiri
   oauth
-  twitter
+  twitter (= 6.2.0)
 
 BUNDLED WITH
    1.17.1

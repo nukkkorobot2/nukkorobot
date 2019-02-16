@@ -434,6 +434,7 @@ def tv_program(client)
             tv_comment = tv_pr.search("div.mb15 ul.programlist li[#{tv_counter}] div.rightarea p[3]").inner_text
             tv_ch = tv_pr.search("div.mb15 ul.programlist li[#{tv_counter}] div.rightarea p[2] span.pr35").inner_text
             tv_text = "[テレビ情報]\n#{tv_ch}  #{tv_date} (#{tv_time})\n\n｢#{tv_title}｣\n\n#{tv_comment}"
+            tv_text.slice!("*")
             if tv_text.length < 141
                 client.update(tv_text)
                 else
