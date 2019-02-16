@@ -720,6 +720,10 @@ begin
                 if tweet.user.screen_name == "SHOWROOM_jp" && tweet.text.include?("#乃木坂46")
                     client.retweet(tweet.id)
                 end
+                #TV番組表
+                if tweet.text.include?("乃木坂番組")
+                    tv_program(client)
+                end
                 #エタフォ
                 begin
                     #client.favorite(tweet.id)
