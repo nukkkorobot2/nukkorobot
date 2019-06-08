@@ -71,7 +71,7 @@ def hukagawa_news(client)
                 client.update("…#{full_text[131,full_text.length]}")
             elsif full_text.length >270
                 client.update("…#{full_text[131,268]}…")
-                client.update("…#{full_text[269,full_text.length]}")
+                client.update("…#{full_text[269,400]}")
             end
         end
         i = i + 1
@@ -339,7 +339,7 @@ end
 #休講情報
 def kyuko(client,tweet,subjects)
     #スクレイピング先のurl
-    ky_url = "http://kyoumu.office.uec.ac.jp/kyuukou/kyuukou.html"
+    ky_url = "http://kyoumu.office.uec.ac.jp/kyuukou/kyuukou2.html"
     #webページを開いてhtmlのオブジェクトを作成,代入
     agent = Mechanize.new
     page = agent.get(ky_url)
@@ -626,8 +626,7 @@ begin
     weather_word = ["天気","てんき","気温","きおん"]
    
     #履修科目
-    subjects = ["知的財産権","技術者倫理","ハードウェアセキュリティ","ユビキタスネットワーク","デジタル信号処理","コンテンツセキュリティ","ネットワークセキュリティ",
-   "暗号理論","データベース論","ソフトウェアセキュリティ","Technical English Intermediate English for Science","歴史学"]
+    subjects = ["学習工学特論","セキュリティ基礎","データマイニング","ベイズ的人工知能特論"]
    
     #家計簿カテゴリ
     categories = ["食費","交際費","クレカ","その他"]
