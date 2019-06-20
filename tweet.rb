@@ -541,8 +541,10 @@ def nogi_news(client)
     news = page.root
     for i in 1..3 do
         text = news.search("div.clearfix table tr[#{5-i}] span.item_title_list").inner_text
+        text2 = news.search("div.clearfix table tr[#{5-i}] span.item_title_list").inner_html
+        p_url = text2[/\/items\/click\/[0-9]*/]
         begin
-            client.update("[NEWS]\n#{text}\n\nhttp://nogikeyaki46ch.atna.jp/")
+            client.update("[NEWS]\n#{text}\n\nhttp://nogikeyaki46ch.atna.jp#{p_url}")
         rescue
             next
         end
