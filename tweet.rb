@@ -393,7 +393,7 @@ def time_tweet1(client,now)
     end
     today_counter = rand(today_counter - 1) + 1
     today_text = today_is.search("div.mw-parser-output ul li[#{today_counter}]").inner_text
-    client.update("ぬっころBOTが#{now.hour}時ごろをお知らせします。\n。今日、#{now.month}月#{now.day}日は#{today_text}")
+    client.update("#{now.month}月#{now.day}日は#{today_text}")
     #メモツイート
     #if now.hour % 6 == 0
     #    query = "From:nukkoron #ぬっころメモ"
