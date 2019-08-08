@@ -550,6 +550,25 @@ def nogi_news(client)
         end
     end
 end
+    
+    
+def it_news(client)
+    url = "https://www.itmedia.co.jp/"
+    agent = Mechanize.new
+    page = agent.get(url)
+    doc = page.root
+    #要素を検索して表示
+    doc.xpath('//div["colBoxIndex"]/div["colBoxTitle"]/a').each do |anchor|
+        if anchor[:title] != nil && (anchor[:href] =~ /https/) != nil
+            text = "[ITmedia]\n" + anchor[:title] + "\n\n" + anchor[:href]
+            begin
+                client.update(text)
+            rescue
+                next
+            end
+        end
+    end
+
 
 
 #英語から日本語の翻訳
@@ -762,6 +781,12 @@ begin
         if now.minute == 3 || now.minute == 18 || now.minute == 33 || now.minute == 48
             if now.second >= 0 && now.second <= 3
                 nogi_news(client)
+            end
+        end
+        #ITニュース
+        if now.minute == 10
+            if now.second >= 0 && now.second <= 3
+                it_news(client)
             end
         end
         #メモツイート
