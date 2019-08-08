@@ -568,7 +568,7 @@ def it_news(client)
             end
         end
     end
-
+end
 
 
 #英語から日本語の翻訳
