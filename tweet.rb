@@ -70,8 +70,8 @@ def hukagawa_news(client)
             if full_text.length > 131 && full_text.length < 270
                 client.update("…#{full_text[131,full_text.length]}")
             elsif full_text.length >270
-                client.update("…#{full_text[131,268]}…")
-                client.update("…#{full_text[269,400]}")
+                client.update("…#{full_text[131,260]}…")
+                client.update("…#{full_text[260,390]}")
             end
         end
         i = i + 1
